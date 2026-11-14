@@ -103,6 +103,7 @@
     article.dataset.name = project.name;
     const art = makeVisual(project);
     const content = make("div", "project-content");
+    if (index === 0) content.appendChild(make("span", "featured-project-label", "Featured project"));
     const topline = make("div", "project-topline");
     add(topline,
       make("span", "project-number", String(index + 1).padStart(2, "0") + " / " + project.kind),
@@ -148,7 +149,18 @@
       add(empty, make("strong", "", "No matching projects."), make("span", "", "Try a different search or choose another project area."));
       grid.appendChild(empty);
     } else {
-      matches.forEach(project => grid.appendChild(makeCard(project, projects.indexOf(project))));
+      matches.forEach((project, matchIndex) => {
+        const projectIndex = projects.indexOf(project);
+        grid.appendChild(makeCard(project, projectIndex));
+        if (projectIndex === 0 && matchIndex < matches.length - 1) {
+          const divider = make("div", "project-divider");
+          add(divider,
+            make("h3", "", "More projects"),
+            make("span", "", String(matches.length - 1).padStart(2, "0") + " projects")
+          );
+          grid.appendChild(divider);
+        }
+      });
     }
     count.textContent = searchTerm || activeCategory !== "all"
       ? "Showing " + matches.length + " of " + projects.length + " public repositories"
