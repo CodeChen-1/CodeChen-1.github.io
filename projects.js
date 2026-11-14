@@ -102,14 +102,15 @@ window.PORTFOLIO_PROJECTS = [
     title: "Smart Download Manager",
     category: "other",
     kind: "PUBLIC REPOSITORY",
-    state: "Empty repository",
-    description: "This public repository currently has no files or README, so there is no project description to summarize yet.",
+    state: "In progress",
+    description: "This project is currently in progress. Its public repository does not yet include source files or a README, so implementation details are not available yet.",
     features: [],
     stack: [],
     testing: "",
-    visual: "empty",
-    visualLabel: "An empty repository with no source files yet.",
-    isEmpty: true,
+    visual: "progress",
+    visualLabel: "A project in progress; source files and a README are not public yet.",
+    isInProgress: true,
+    hasSource: false,
     repo: "https://github.com/CodeChen-1/Smart-Download-Manager"
   }
 ];

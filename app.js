@@ -3,6 +3,8 @@
 
   const projects = Array.isArray(window.PORTFOLIO_PROJECTS) ? window.PORTFOLIO_PROJECTS : [];
   const grid = document.querySelector("#project-grid");
+  const progressSection = document.querySelector("#in-progress");
+  const progressGrid = document.querySelector("#in-progress-grid");
   const count = document.querySelector("#project-count");
   const search = document.querySelector("#project-search");
   const filters = Array.from(document.querySelectorAll(".filter-button"));
@@ -27,8 +29,8 @@
     art.setAttribute("role", "img");
     art.setAttribute("aria-label", project.visualLabel);
     const kicker = make("div", "art-kicker");
-    add(kicker, make("span", "", project.visual === "empty" ? "REPOSITORY STATE" : "FEATURE MAP"));
-    if (project.visual !== "empty") add(kicker, make("span", "", "SOURCE / WORKFLOW"));
+    add(kicker, make("span", "", project.isInProgress ? "PROJECT STATUS" : "FEATURE MAP"));
+    if (!project.isInProgress) add(kicker, make("span", "", "SOURCE / WORKFLOW"));
     art.appendChild(kicker);
 
     if (project.visual === "models") {
@@ -87,18 +89,23 @@
       const footer = make("div", "art-doc-footer");
       add(footer, make("span", "", "CAPTURE → DETECT"), make("strong", "", "PDF"));
       add(art, documentShape, footer);
-    } else {
-      const folder = make("div", "art-empty-folder");
-      add(folder, make("strong", "", "No files found"), document.createTextNode("No source or README available yet."));
-      const empty = make("div", "art-empty");
-      empty.appendChild(folder);
-      art.appendChild(empty);
+    } else if (project.visual === "progress") {
+      const panel = make("div", "art-progress-panel");
+      const status = make("div", "art-progress-status");
+      add(status, make("i"), make("strong", "", "In development"));
+      const details = make("div", "art-progress-meta");
+      add(details,
+        row("art-progress-row", "SOURCE FILES", "NOT PUBLIC YET"),
+        row("art-progress-row", "README", "NOT AVAILABLE YET")
+      );
+      add(panel, status, make("div", "art-progress-divider"), details);
+      art.appendChild(panel);
     }
     return art;
   }
 
   function makeCard(project, index) {
-    const article = make("article", "project-card" + (index === 0 ? " is-featured" : "") + (project.isEmpty ? " is-empty" : ""));
+    const article = make("article", "project-card" + (index === 0 ? " is-featured" : "") + (project.isInProgress ? " is-in-progress" : ""));
     article.dataset.category = project.category;
     article.dataset.name = project.name;
     const art = makeVisual(project);
@@ -110,14 +117,14 @@
       make("span", "project-state", project.state)
     );
     const title = make("h3", "", project.title);
-    const summary = make("p", "project-description" + (project.isEmpty ? " empty-copy" : ""), project.description);
+    const summary = make("p", "project-description", project.description);
     const features = make("ul", "project-features");
     project.features.forEach(feature => features.appendChild(make("li", "", feature)));
     const stack = make("div", "project-stack");
     stack.setAttribute("aria-label", "Technology stack");
     project.stack.forEach(label => stack.appendChild(make("span", "stack-tag", label)));
     const footer = make("div", "project-footer");
-    const note = project.testing || (project.isEmpty ? "No source files on the default branch." : (project.category === "vision" ? "See the repository README for requirements and setup." : ""));
+    const note = project.testing || (project.isInProgress ? "Source files and README not public yet." : (project.category === "vision" ? "See the repository README for requirements and setup." : ""));
     const test = make("span", "project-test", note);
     const link = make("a", "repo-link", "View repository");
     link.href = project.repo;
@@ -137,34 +144,43 @@
   function matchingProjects() {
     return projects.filter(project => {
       const categoryMatches = activeCategory === "all" || project.category === activeCategory;
-      const haystack = [project.name, project.title, project.kind, project.description].concat(project.features, project.stack).join(" ").toLowerCase();
+      const haystack = [project.name, project.title, project.kind, project.state, project.description].concat(project.features, project.stack).join(" ").toLowerCase();
       return categoryMatches && haystack.includes(searchTerm);
     });
   }
   function render() {
     const matches = matchingProjects();
+    const showcaseMatches = matches.filter(project => !project.isInProgress);
+    const progressMatches = matches.filter(project => project.isInProgress);
     grid.replaceChildren();
+    progressGrid.replaceChildren();
+    progressSection.hidden = progressMatches.length === 0;
     if (!matches.length) {
       const empty = make("div", "no-results");
       add(empty, make("strong", "", "No matching projects."), make("span", "", "Try a different search or choose another project area."));
       grid.appendChild(empty);
+    } else if (!showcaseMatches.length) {
+      const empty = make("div", "no-results");
+      add(empty, make("strong", "", "No showcase projects match."), make("span", "", "The matching repository appears in the In progress section below."));
+      grid.appendChild(empty);
     } else {
-      matches.forEach((project, matchIndex) => {
+      showcaseMatches.forEach((project, matchIndex) => {
         const projectIndex = projects.indexOf(project);
         grid.appendChild(makeCard(project, projectIndex));
-        if (projectIndex === 0 && matchIndex < matches.length - 1) {
+        if (projectIndex === 0 && matchIndex < showcaseMatches.length - 1) {
           const divider = make("div", "project-divider");
           add(divider,
             make("h3", "", "More projects"),
-            make("span", "", String(matches.length - 1).padStart(2, "0") + " projects")
+            make("span", "", String(showcaseMatches.length - 1).padStart(2, "0") + " projects")
           );
           grid.appendChild(divider);
         }
       });
     }
+    progressMatches.forEach(project => progressGrid.appendChild(makeCard(project, projects.indexOf(project))));
     count.textContent = searchTerm || activeCategory !== "all"
       ? "Showing " + matches.length + " of " + projects.length + " public repositories"
-      : projects.length + " public repositories · " + projects.filter(project => !project.isEmpty).length + " with source";
+      : projects.length + " public repositories · " + showcaseMatches.length + " in showcase · " + progressMatches.length + " in progress";
   }
 
   filters.forEach(button => {
