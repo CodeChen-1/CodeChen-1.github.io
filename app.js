@@ -23,7 +23,7 @@
   };
 
   function makeVisual(project) {
-    const art = make("div", "project-art art-" + project.visual);
+    const art = make("div", "project-art project-art--" + project.visual);
     art.setAttribute("role", "img");
     art.setAttribute("aria-label", project.visualLabel);
     const kicker = make("div", "art-kicker");
