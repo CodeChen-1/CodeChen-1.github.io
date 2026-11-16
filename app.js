@@ -11,6 +11,8 @@
   const prefersMotion = window.matchMedia && window.matchMedia("(prefers-reduced-motion: no-preference)").matches;
   let revealObserver = null;
   let revealInitialCards = false;
+  const autoPlayedDemos = new Set();
+  const demoTimers = new WeakMap();
   let activeCategory = "all";
   let searchTerm = "";
 
@@ -18,7 +20,14 @@
     revealObserver = new IntersectionObserver(entries => {
       entries.forEach(entry => {
         if (!entry.isIntersecting) return;
-        entry.target.classList.add("is-visible");
+        if (entry.target.hasAttribute("data-reveal")) entry.target.classList.add("is-visible");
+        if (entry.target.matches(".project-card[data-demo]")) {
+          const projectName = entry.target.dataset.name;
+          if (!autoPlayedDemos.has(projectName)) {
+            autoPlayedDemos.add(projectName);
+            playDemo(entry.target);
+          }
+        }
         revealObserver.unobserve(entry.target);
       });
     }, { threshold: 0.08, rootMargin: "0px 0px -28px 0px" });
@@ -39,28 +48,56 @@
     return node;
   };
 
+  function playDemo(card) {
+    if (!prefersMotion) return;
+    const previousTimer = demoTimers.get(card);
+    if (previousTimer) window.clearTimeout(previousTimer);
+    card.classList.remove("is-demo-playing");
+    void card.offsetWidth;
+    card.classList.add("is-demo-playing");
+    demoTimers.set(card, window.setTimeout(() => {
+      card.classList.remove("is-demo-playing");
+      demoTimers.delete(card);
+    }, 3400));
+  }
+
   function observeReveals() {
     if (!revealObserver) return;
     document.querySelectorAll("[data-reveal]:not([data-reveal-observed])").forEach(node => {
       node.dataset.revealObserved = "true";
       revealObserver.observe(node);
     });
+    document.querySelectorAll(".project-card[data-demo]:not([data-demo-observed])").forEach(node => {
+      node.dataset.demoObserved = "true";
+      if (!autoPlayedDemos.has(node.dataset.name)) revealObserver.observe(node);
+    });
   }
 
   function clearGrid(container) {
     if (revealObserver) {
-      container.querySelectorAll("[data-reveal-observed]").forEach(node => revealObserver.unobserve(node));
+      container.querySelectorAll("[data-reveal-observed], [data-demo-observed]").forEach(node => revealObserver.unobserve(node));
     }
+    container.querySelectorAll(".project-card").forEach(card => {
+      const timer = demoTimers.get(card);
+      if (timer) window.clearTimeout(timer);
+      demoTimers.delete(card);
+    });
     container.replaceChildren();
   }
 
   function makeVisual(project) {
     const art = make("div", "project-art project-art--" + project.visual);
-    art.setAttribute("role", "img");
+    art.setAttribute("role", "group");
     art.setAttribute("aria-label", project.visualLabel);
     const kicker = make("div", "art-kicker");
-    add(kicker, make("span", "", project.isInProgress ? "PROJECT STATUS" : "FEATURE MAP"));
-    if (!project.isInProgress) add(kicker, make("span", "", "SOURCE / WORKFLOW"));
+    kicker.appendChild(make("span", "", project.isInProgress ? "PROJECT STATUS" : "WORKFLOW PREVIEW"));
+    if (!project.isInProgress) {
+      const replay = make("button", "demo-replay");
+      replay.type = "button";
+      replay.setAttribute("aria-label", "Replay workflow demo for " + project.title);
+      add(replay, make("span", "demo-replay-symbol", "↻"), make("span", "demo-replay-label", "Replay demo"));
+      kicker.appendChild(replay);
+    }
     art.appendChild(kicker);
 
     if (project.visual === "models") {
@@ -137,6 +174,7 @@
   function makeCard(project, index) {
     const article = make("article", "project-card" + (index === 0 ? " is-featured" : "") + (project.isInProgress ? " is-in-progress" : ""));
     if (revealInitialCards) article.dataset.reveal = "card";
+    if (!project.isInProgress) article.dataset.demo = project.visual;
     article.dataset.category = project.category;
     article.dataset.name = project.name;
     const art = makeVisual(project);
@@ -169,6 +207,8 @@
     if (project.stack.length) content.appendChild(stack);
     content.appendChild(footer);
     add(article, art, content);
+    const replay = art.querySelector(".demo-replay");
+    if (replay) replay.addEventListener("click", () => playDemo(article));
     return article;
   }
 
