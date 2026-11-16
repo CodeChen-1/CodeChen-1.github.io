@@ -52,13 +52,19 @@
     if (!prefersMotion) return;
     const previousTimer = demoTimers.get(card);
     if (previousTimer) window.clearTimeout(previousTimer);
+    const replay = card.querySelector(".demo-replay");
+    const replayLabel = replay && replay.querySelector(".demo-replay-label");
+    if (replayLabel) replayLabel.textContent = "Playing demo";
+    if (replay) replay.setAttribute("aria-label", "Playing workflow demo for " + card.querySelector("h3").textContent);
     card.classList.remove("is-demo-playing");
     void card.offsetWidth;
     card.classList.add("is-demo-playing");
     demoTimers.set(card, window.setTimeout(() => {
       card.classList.remove("is-demo-playing");
+      if (replayLabel) replayLabel.textContent = "Replay demo";
+      if (replay) replay.setAttribute("aria-label", "Replay workflow demo for " + card.querySelector("h3").textContent);
       demoTimers.delete(card);
-    }, 3400));
+    }, 4800));
   }
 
   function observeReveals() {
@@ -94,8 +100,12 @@
     if (!project.isInProgress) {
       const replay = make("button", "demo-replay");
       replay.type = "button";
-      replay.setAttribute("aria-label", "Replay workflow demo for " + project.title);
-      add(replay, make("span", "demo-replay-symbol", "↻"), make("span", "demo-replay-label", "Replay demo"));
+      replay.setAttribute("aria-label", "Play five-second workflow demo for " + project.title);
+      add(replay,
+        make("span", "demo-replay-symbol", "▶"),
+        make("span", "demo-replay-label", "Play demo"),
+        make("span", "demo-replay-duration", "05 SEC")
+      );
       kicker.appendChild(replay);
     }
     art.appendChild(kicker);
@@ -152,7 +162,7 @@
       const documentShape = make("div", "art-document");
       const lines = make("div", "art-doc-lines");
       for (let n = 0; n < 4; n += 1) lines.appendChild(make("i"));
-      documentShape.appendChild(lines);
+      add(documentShape, lines, make("i", "art-scan-beam"));
       const footer = make("div", "art-doc-footer");
       add(footer, make("span", "", "CAPTURE → DETECT"), make("strong", "", "PDF"));
       add(art, documentShape, footer);
@@ -168,6 +178,7 @@
       add(panel, status, make("div", "art-progress-divider"), details);
       art.appendChild(panel);
     }
+    if (!project.isInProgress) art.appendChild(make("div", "art-demo-progress"));
     return art;
   }
 
