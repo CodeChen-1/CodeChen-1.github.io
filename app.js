@@ -8,8 +8,23 @@
   const count = document.querySelector("#project-count");
   const search = document.querySelector("#project-search");
   const filters = Array.from(document.querySelectorAll(".filter-button"));
+  const prefersMotion = window.matchMedia && window.matchMedia("(prefers-reduced-motion: no-preference)").matches;
+  let revealObserver = null;
+  let revealInitialCards = false;
   let activeCategory = "all";
   let searchTerm = "";
+
+  if (prefersMotion && "IntersectionObserver" in window) {
+    revealObserver = new IntersectionObserver(entries => {
+      entries.forEach(entry => {
+        if (!entry.isIntersecting) return;
+        entry.target.classList.add("is-visible");
+        revealObserver.unobserve(entry.target);
+      });
+    }, { threshold: 0.08, rootMargin: "0px 0px -28px 0px" });
+    revealInitialCards = true;
+    document.documentElement.classList.add("motion-ready");
+  }
 
   const make = (tag, className, text) => {
     const node = document.createElement(tag);
@@ -23,6 +38,21 @@
     add(node, make("span", "", left), make("span", "", right));
     return node;
   };
+
+  function observeReveals() {
+    if (!revealObserver) return;
+    document.querySelectorAll("[data-reveal]:not([data-reveal-observed])").forEach(node => {
+      node.dataset.revealObserved = "true";
+      revealObserver.observe(node);
+    });
+  }
+
+  function clearGrid(container) {
+    if (revealObserver) {
+      container.querySelectorAll("[data-reveal-observed]").forEach(node => revealObserver.unobserve(node));
+    }
+    container.replaceChildren();
+  }
 
   function makeVisual(project) {
     const art = make("div", "project-art project-art--" + project.visual);
@@ -106,6 +136,7 @@
 
   function makeCard(project, index) {
     const article = make("article", "project-card" + (index === 0 ? " is-featured" : "") + (project.isInProgress ? " is-in-progress" : ""));
+    if (revealInitialCards) article.dataset.reveal = "card";
     article.dataset.category = project.category;
     article.dataset.name = project.name;
     const art = makeVisual(project);
@@ -152,8 +183,8 @@
     const matches = matchingProjects();
     const showcaseMatches = matches.filter(project => !project.isInProgress);
     const progressMatches = matches.filter(project => project.isInProgress);
-    grid.replaceChildren();
-    progressGrid.replaceChildren();
+    clearGrid(grid);
+    clearGrid(progressGrid);
     progressSection.hidden = progressMatches.length === 0;
     if (!matches.length) {
       const empty = make("div", "no-results");
@@ -181,6 +212,8 @@
     count.textContent = searchTerm || activeCategory !== "all"
       ? "Showing " + matches.length + " of " + projects.length + " public repositories"
       : projects.length + " public repositories · " + showcaseMatches.length + " in showcase · " + progressMatches.length + " in progress";
+    observeReveals();
+    revealInitialCards = false;
   }
 
   filters.forEach(button => {

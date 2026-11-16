@@ -29,7 +29,7 @@
 
   <main id="main">
     <section class="hero section-wrap" id="top" aria-labelledby="hero-title">
-      <div class="hero-copy">
+      <div class="hero-copy" data-reveal="hero">
         <p class="eyebrow"><span class="status-dot" aria-hidden="true"></span> SOFTWARE PORTFOLIO <span class="eyebrow-divider">/</span> CODECHEN-1</p>
         <h1 id="hero-title">Useful software,<br><em>built end to end.</em></h1>
         <p class="hero-intro">A collection of Android apps, full-stack systems, and computer-vision tools—each built around a practical task, from planning a day to reading a camera feed.</p>
@@ -40,7 +40,7 @@
         <p class="hero-note"><span class="note-rule" aria-hidden="true"></span> Eight public repositories, gathered in one place.</p>
       </div>
 
-      <aside class="project-mix" aria-label="Portfolio project areas">
+      <aside class="project-mix" data-reveal="hero-panel" aria-label="Portfolio project areas">
         <div class="mix-heading"><span>PROJECT MIX</span><span>INDEX / 08</span></div>
         <div class="mix-row">
           <span class="mix-index">01</span>
@@ -62,7 +62,7 @@
     </section>
 
     <div class="signal-strip" aria-label="Project themes">
-      <div class="signal-inner">
+      <div class="signal-inner" data-reveal>
         <span>01 / PLAN</span><span class="signal-line" aria-hidden="true"></span>
         <span>02 / INTERPRET</span><span class="signal-line" aria-hidden="true"></span>
         <span>03 / ACT</span><span class="signal-symbol" aria-hidden="true">✳</span>
@@ -71,7 +71,7 @@
     </div>
 
     <section class="work-section section-wrap" id="work" aria-labelledby="work-title">
-      <div class="section-intro">
+      <div class="section-intro" data-reveal>
         <div>
           <p class="eyebrow"><span class="eyebrow-number">01</span> THE WORK</p>
           <h2 id="work-title">Projects, in context.</h2>
@@ -79,7 +79,7 @@
         <p class="section-summary">Browse the project showcase. Each entry explains the problem it handles, how it works, and the tools behind it.</p>
       </div>
 
-      <div class="project-controls">
+      <div class="project-controls" data-reveal="late">
         <div class="filter-list" role="group" aria-label="Filter projects by area">
           <button class="filter-button is-active" type="button" data-filter="all" aria-pressed="true">All work <span>08</span></button>
           <button class="filter-button" type="button" data-filter="mobile" aria-pressed="false">Mobile</button>
@@ -95,13 +95,13 @@
         </label>
       </div>
 
-      <div id="project-count" class="result-count" role="status" aria-live="polite"></div>
+      <div id="project-count" class="result-count" data-reveal="late" role="status" aria-live="polite"></div>
       <div class="project-grid" id="project-grid"></div>
-      <p class="source-note">Project details are based on public repository READMEs. Repositories without public source are clearly marked as in progress.</p>
+      <p class="source-note" data-reveal>Project details are based on public repository READMEs. Repositories without public source are clearly marked as in progress.</p>
     </section>
 
     <section class="progress-section section-wrap" id="in-progress" aria-labelledby="progress-title" hidden>
-      <div class="progress-intro">
+      <div class="progress-intro" data-reveal>
         <div>
           <p class="eyebrow"><span class="eyebrow-number">02</span> CURRENTLY BUILDING</p>
           <h2 id="progress-title">In progress.</h2>
@@ -112,7 +112,7 @@
     </section>
 
     <section class="about-section" id="about" aria-labelledby="about-title">
-      <div class="section-wrap about-inner">
+      <div class="section-wrap about-inner" data-reveal>
         <div class="about-label">
           <p class="eyebrow"><span class="eyebrow-number">03</span> THE THREAD</p>
           <span class="about-mark" aria-hidden="true">↘</span>
@@ -131,7 +131,7 @@
     </section>
   </main>
 
-  <footer class="site-footer section-wrap">
+  <footer class="site-footer section-wrap" data-reveal>
     <a class="brand footer-brand" href="#top" aria-label="Back to top">
       <span class="brand-mark" aria-hidden="true">CC</span>
       <span class="brand-copy"><strong>CodeChen-1</strong><small>Project portfolio</small></span>
