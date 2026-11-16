@@ -9,9 +9,12 @@
   const search = document.querySelector("#project-search");
   const filters = Array.from(document.querySelectorAll(".filter-button"));
   const sectionLinks = Array.from(document.querySelectorAll("[data-section-link]"));
+  const sectionRail = document.querySelector(".section-rail");
+  const main = document.querySelector("#main");
   const prefersMotion = window.matchMedia && window.matchMedia("(prefers-reduced-motion: no-preference)").matches;
   let revealObserver = null;
   let sectionObserver = null;
+  let sectionRailFrame = 0;
   const autoPlayedDemos = new Set();
   const demoTimers = new WeakMap();
   let activeCategory = "all";
@@ -46,6 +49,28 @@
     });
   }
 
+  function updateSectionRailBounds() {
+    if (!sectionRail || !main) return;
+    const mainBounds = main.getBoundingClientRect();
+    const inset = window.innerHeight * .05;
+    const bottomLimit = window.innerHeight - inset;
+    const top = Math.max(inset, Math.min(mainBounds.top, bottomLimit));
+    const bottom = Math.min(bottomLimit, mainBounds.bottom);
+    const height = Math.max(0, bottom - top);
+    const visibleLinkCount = sectionLinks.filter(link => !link.hidden).length;
+    sectionRail.style.setProperty("--section-rail-top", `${Math.round(top)}px`);
+    sectionRail.style.setProperty("--section-rail-height", `${Math.floor(height)}px`);
+    sectionRail.classList.toggle("is-within-main", height >= visibleLinkCount * 36);
+  }
+
+  function scheduleSectionRailBounds() {
+    if (sectionRailFrame) return;
+    sectionRailFrame = window.requestAnimationFrame(() => {
+      sectionRailFrame = 0;
+      updateSectionRailBounds();
+    });
+  }
+
   function refreshSectionNavigation() {
     sectionLinks.forEach(link => {
       const section = document.querySelector(link.hash);
@@ -69,17 +94,20 @@
         )[0];
       if (nearestSection) setActiveSection(nearestSection.id);
     }
+    updateSectionRailBounds();
   }
 
   sectionLinks.forEach(link => link.addEventListener("click", () => setActiveSection(link.hash.slice(1))));
   setActiveSection("top");
   setupSectionObserver();
   let sectionObserverResizeFrame = 0;
+  window.addEventListener("scroll", scheduleSectionRailBounds, { passive: true });
   window.addEventListener("resize", () => {
     if (sectionObserverResizeFrame) window.cancelAnimationFrame(sectionObserverResizeFrame);
     sectionObserverResizeFrame = window.requestAnimationFrame(() => {
       sectionObserverResizeFrame = 0;
       setupSectionObserver();
+      updateSectionRailBounds();
     });
   }, { passive: true });
 
