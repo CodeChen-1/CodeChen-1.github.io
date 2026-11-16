@@ -8,12 +8,80 @@
   const count = document.querySelector("#project-count");
   const search = document.querySelector("#project-search");
   const filters = Array.from(document.querySelectorAll(".filter-button"));
+  const sectionLinks = Array.from(document.querySelectorAll("[data-section-link]"));
   const prefersMotion = window.matchMedia && window.matchMedia("(prefers-reduced-motion: no-preference)").matches;
   let revealObserver = null;
+  let sectionObserver = null;
   const autoPlayedDemos = new Set();
   const demoTimers = new WeakMap();
   let activeCategory = "all";
   let searchTerm = "";
+
+  function setupSectionObserver() {
+    if (!("IntersectionObserver" in window)) return;
+    if (sectionObserver) sectionObserver.disconnect();
+    const topInset = Math.round(window.innerHeight * .42);
+    const bottomInset = Math.round(window.innerHeight * .5);
+    sectionObserver = new IntersectionObserver(entries => {
+      const visibleSections = entries.filter(entry => entry.isIntersecting);
+      if (!visibleSections.length) return;
+      const marker = window.innerHeight * .46;
+      const activeEntry = visibleSections.reduce((closest, entry) =>
+        Math.abs(entry.boundingClientRect.top - marker) < Math.abs(closest.boundingClientRect.top - marker) ? entry : closest
+      );
+      setActiveSection(activeEntry.target.id);
+    }, { rootMargin: `-${topInset}px 0px -${bottomInset}px 0px`, threshold: 0 });
+    sectionLinks.forEach(link => {
+      const section = document.querySelector(link.hash);
+      if (section && !link.hidden && !section.hidden) sectionObserver.observe(section);
+    });
+  }
+
+  function setActiveSection(sectionId) {
+    sectionLinks.forEach(link => {
+      const active = link.hash === "#" + sectionId;
+      link.classList.toggle("is-active", active);
+      if (active) link.setAttribute("aria-current", "location");
+      else link.removeAttribute("aria-current");
+    });
+  }
+
+  function refreshSectionNavigation() {
+    sectionLinks.forEach(link => {
+      const section = document.querySelector(link.hash);
+      const available = Boolean(section && !section.hidden);
+      link.hidden = !available;
+      if (!available) {
+        if (section && sectionObserver) sectionObserver.unobserve(section);
+        return;
+      }
+      if (sectionObserver) sectionObserver.observe(section);
+    });
+
+    if (!sectionLinks.some(link => !link.hidden && link.classList.contains("is-active"))) {
+      const marker = window.innerHeight * .46;
+      const nearestSection = sectionLinks
+        .filter(link => !link.hidden)
+        .map(link => document.querySelector(link.hash))
+        .filter(Boolean)
+        .sort((left, right) =>
+          Math.abs(left.getBoundingClientRect().top - marker) - Math.abs(right.getBoundingClientRect().top - marker)
+        )[0];
+      if (nearestSection) setActiveSection(nearestSection.id);
+    }
+  }
+
+  sectionLinks.forEach(link => link.addEventListener("click", () => setActiveSection(link.hash.slice(1))));
+  setActiveSection("top");
+  setupSectionObserver();
+  let sectionObserverResizeFrame = 0;
+  window.addEventListener("resize", () => {
+    if (sectionObserverResizeFrame) window.cancelAnimationFrame(sectionObserverResizeFrame);
+    sectionObserverResizeFrame = window.requestAnimationFrame(() => {
+      sectionObserverResizeFrame = 0;
+      setupSectionObserver();
+    });
+  }, { passive: true });
 
   if (prefersMotion && "IntersectionObserver" in window) {
     revealObserver = new IntersectionObserver(entries => {
@@ -238,6 +306,7 @@
     clearGrid(grid);
     clearGrid(progressGrid);
     progressSection.hidden = progressMatches.length === 0;
+    refreshSectionNavigation();
     if (!matches.length) {
       const empty = make("div", "no-results");
       add(empty, make("strong", "", "No matching projects."), make("span", "", "Try a different search or choose another project area."));
