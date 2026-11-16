@@ -376,6 +376,23 @@ button { color: inherit; }
   .about-label { grid-row: span 2; }
   .about-mark { margin-top: 45px; }
 }
+@media (min-width: 761px) and (max-width: 1000px) {
+  .hero-inner { gap: clamp(60px, 8vw, 80px); padding-block: clamp(64px, 8vw, 84px) 46px; }
+  .hero-copy { max-width: 720px; padding-block: 16px; }
+  .hero h1 { margin: 31px 0 26px; font-size: clamp(3.5rem, 2.5rem + 4.5vw, 5.25rem); line-height: 1.02; }
+  .hero-intro { max-width: 620px; font-size: 1.0625rem; line-height: 1.75; }
+  .hero-actions { margin-top: 34px; gap: 19px 25px; }
+  .hero-ledger { margin-top: clamp(40px, 5.5vw, 58px); }
+  .spotlight-view { padding: 21px; gap: 22px; }
+  .spotlight-copy h2 { font-size: clamp(1.75rem, 1.5rem + 1vw, 2.125rem); }
+  .spotlight-description { font-size: .875rem; line-height: 1.65; }
+  .spotlight-stack { gap: 6px; }
+  .stack-tag { font-size: 8px; }
+  .spotlight-link { font-size: 12px; }
+  .spotlight-stage, .spotlight-stage .project-art { min-height: 280px; }
+  .spotlight-pick { min-height: 50px; padding-inline: 7px; }
+  .spotlight-pick-name { font-size: 10px; }
+}
 @media (max-width: 760px) {
   :root { --gutter: 23px; }
   .site-header { min-height: 72px; }

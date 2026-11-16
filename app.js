@@ -26,7 +26,6 @@
   const prefersMotion = window.matchMedia && window.matchMedia("(prefers-reduced-motion: no-preference)").matches;
   const demoTimers = new WeakMap();
   let revealObserver = null;
-  let sectionObserver = null;
   let sectionRailFrame = 0;
   let selectedSpotlightIndex = -1;
   let spotlightRequest = 0;
@@ -59,24 +58,26 @@
     });
   }
 
-  function setupSectionObserver() {
-    if (!("IntersectionObserver" in window)) return;
-    if (sectionObserver) sectionObserver.disconnect();
-    const topInset = Math.round(window.innerHeight * .42);
-    const bottomInset = Math.round(window.innerHeight * .5);
-    sectionObserver = new IntersectionObserver(entries => {
-      const visibleSections = entries.filter(entry => entry.isIntersecting);
-      if (!visibleSections.length) return;
-      const marker = window.innerHeight * .46;
-      const activeEntry = visibleSections.reduce((closest, entry) =>
-        Math.abs(entry.boundingClientRect.top - marker) < Math.abs(closest.boundingClientRect.top - marker) ? entry : closest
-      );
-      setActiveSection(activeEntry.target.id);
-    }, { rootMargin: "-" + topInset + "px 0px -" + bottomInset + "px 0px", threshold: 0 });
-    sectionLinks.forEach(link => {
-      const section = document.querySelector(link.hash);
-      if (section && !link.hidden && !section.hidden) sectionObserver.observe(section);
+  function updateActiveSection() {
+    const visibleSections = sectionLinks
+      .filter(link => !link.hidden)
+      .map(link => document.querySelector(link.hash))
+      .filter(Boolean);
+    if (!visibleSections.length) return;
+
+    const atPageBottom = Math.ceil(window.scrollY + window.innerHeight) >= document.documentElement.scrollHeight - 1;
+    if (atPageBottom) {
+      setActiveSection(visibleSections[visibleSections.length - 1].id);
+      return;
+    }
+
+    const marker = window.innerHeight * .46;
+    const activeSection = visibleSections.find(section => {
+      const bounds = section.getBoundingClientRect();
+      return bounds.top <= marker && bounds.bottom > marker;
     });
+    const precedingSections = visibleSections.filter(section => section.getBoundingClientRect().top <= marker);
+    setActiveSection((activeSection || precedingSections[precedingSections.length - 1] || visibleSections[0]).id);
   }
 
   function updateSectionRailBounds() {
@@ -98,6 +99,7 @@
     sectionRailFrame = window.requestAnimationFrame(() => {
       sectionRailFrame = 0;
       updateSectionRailBounds();
+      updateActiveSection();
     });
   }
 
@@ -106,25 +108,9 @@
       const section = document.querySelector(link.hash);
       const available = Boolean(section && !section.hidden);
       link.hidden = !available;
-      if (!available) {
-        if (section && sectionObserver) sectionObserver.unobserve(section);
-        return;
-      }
-      if (sectionObserver) sectionObserver.observe(section);
     });
-
-    if (!sectionLinks.some(link => !link.hidden && link.classList.contains("is-active"))) {
-      const marker = window.innerHeight * .46;
-      const nearestSection = sectionLinks
-        .filter(link => !link.hidden)
-        .map(link => document.querySelector(link.hash))
-        .filter(Boolean)
-        .sort((left, right) =>
-          Math.abs(left.getBoundingClientRect().top - marker) - Math.abs(right.getBoundingClientRect().top - marker)
-        )[0];
-      if (nearestSection) setActiveSection(nearestSection.id);
-    }
     updateSectionRailBounds();
+    updateActiveSection();
   }
 
   function stopDemo(scope) {
@@ -475,15 +461,14 @@
   }
 
   sectionLinks.forEach(link => link.addEventListener("click", () => setActiveSection(link.hash.slice(1))));
-  setActiveSection("top");
-  setupSectionObserver();
+  updateActiveSection();
   window.addEventListener("scroll", scheduleSectionRailBounds, { passive: true });
   window.addEventListener("resize", () => {
     if (sectionRailFrame) window.cancelAnimationFrame(sectionRailFrame);
     sectionRailFrame = window.requestAnimationFrame(() => {
       sectionRailFrame = 0;
-      setupSectionObserver();
       updateSectionRailBounds();
+      updateActiveSection();
     });
   }, { passive: true });
 
