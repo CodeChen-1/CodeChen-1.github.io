@@ -27,6 +27,8 @@ button { color: inherit; }
 ::selection { color: var(--ink); background: var(--acid); }
 .skip-link { position: fixed; z-index: 20; top: 8px; left: 8px; padding: 10px 15px; color: var(--white); background: var(--forest-deep); transform: translateY(-150%); }
 .skip-link:focus { transform: translateY(0); }
+.scroll-progress { position: fixed; z-index: 50; inset: 0 0 auto; height: 3px; overflow: hidden; visibility: hidden; pointer-events: none; }
+.scroll-progress span { width: 100%; height: 100%; display: block; transform: scaleX(0); transform-origin: left center; background: linear-gradient(90deg, var(--orange), var(--acid) 48%, #8fcf87); box-shadow: 0 0 16px rgb(220 233 107 / 55%); }
 .sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0,0,0,0); white-space: nowrap; clip-path: inset(50%); }
 .section-wrap { width: min(var(--wrap), calc(100% - var(--gutter) * 2)); margin-inline: auto; }
 
@@ -257,9 +259,16 @@ button { color: inherit; }
   12%, 84% { opacity: 1; }
   100% { opacity: 0; transform: translateY(66px); }
 }
+@keyframes scroll-fill {
+  to { transform: scaleX(1); }
+}
 
 @media (prefers-reduced-motion: no-preference) {
   html { scroll-behavior: smooth; }
+  @supports (animation-timeline: scroll()) {
+    .scroll-progress { visibility: visible; }
+    .scroll-progress span { animation: scroll-fill linear both; animation-duration: auto; animation-timeline: scroll(root block); }
+  }
   .site-nav a::after, .footer-link::after, .text-link::after { transition: transform .2s ease; }
   .site-nav a:hover::after, .site-nav a:focus-visible::after, .footer-link:hover::after, .footer-link:focus-visible::after, .text-link:hover::after, .text-link:focus-visible::after { transform: scaleX(1); }
   .button { transition: transform .18s ease, background .18s ease; }
@@ -268,15 +277,18 @@ button { color: inherit; }
   .project-card:hover { transform: translateY(-3px); }
   .repo-link span { transition: transform .18s ease; }
   .repo-link:hover span { transform: translate(2px,-2px); }
-  .motion-ready [data-reveal] { opacity: 0; transition: opacity .62s cubic-bezier(.2,.72,.24,1); }
-  .motion-ready [data-reveal="hero-panel"] { transition-delay: 90ms; }
-  .motion-ready [data-reveal="late"] { transition-delay: 100ms; }
+  .motion-ready [data-reveal] { opacity: 0; transition: opacity .72s cubic-bezier(.2,.72,.24,1); transition-delay: calc(var(--reveal-order, 0) * 70ms); }
+  .motion-ready [data-reveal="headline"] { clip-path: inset(0 0 100% 0); transition: opacity .36s ease, clip-path .82s cubic-bezier(.16,.76,.23,1); transition-delay: 60ms; }
+  .motion-ready [data-reveal="hero-panel"] { transition-delay: 120ms; }
+  .motion-ready [data-reveal="late"] { transition-delay: 150ms; }
   .motion-ready [data-reveal].is-visible { opacity: 1; }
+  .motion-ready [data-reveal="headline"].is-visible { clip-path: inset(0); }
   @supports (translate: 0 1px) {
-    .motion-ready [data-reveal] { translate: 0 18px; transition-property: opacity, translate; transition-duration: .62s; transition-timing-function: cubic-bezier(.2,.72,.24,1); }
-    .motion-ready [data-reveal="hero-panel"] { transition-delay: 90ms; }
-    .motion-ready [data-reveal="late"] { transition-delay: 100ms; }
-    .motion-ready [data-reveal].is-visible { translate: 0 0; }
+    .motion-ready [data-reveal] { translate: 0 26px; scale: .985; transition-property: opacity, translate, scale; transition-duration: .72s, .82s, .82s; transition-timing-function: cubic-bezier(.2,.72,.24,1); }
+    .motion-ready [data-reveal="hero-panel"] { translate: 0 32px; scale: .965; transition-delay: 120ms; }
+    .motion-ready [data-reveal="late"] { transition-delay: 150ms; }
+    .motion-ready [data-reveal="headline"] { translate: 0 16px; scale: .99; transition-property: opacity, clip-path, translate, scale; transition-duration: .36s, .82s, .72s, .72s; transition-delay: 60ms; }
+    .motion-ready [data-reveal].is-visible { translate: 0 0; scale: 1; }
   }
   .motion-ready .project-mix .mix-track b { transform: scaleX(0); transform-origin: left; }
   .motion-ready .project-mix.is-visible .mix-track b { transform: scaleX(1); transition: transform .82s cubic-bezier(.2,.75,.25,1); }

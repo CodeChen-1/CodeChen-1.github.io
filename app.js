@@ -182,9 +182,12 @@
     return art;
   }
 
-  function makeCard(project, index) {
+  function makeCard(project, index, revealOrder = 0) {
     const article = make("article", "project-card" + (index === 0 ? " is-featured" : "") + (project.isInProgress ? " is-in-progress" : ""));
-    if (revealInitialCards) article.dataset.reveal = "card";
+    if (revealInitialCards) {
+      article.dataset.reveal = "card";
+      article.style.setProperty("--reveal-order", String(Math.min(revealOrder, 4)));
+    }
     if (!project.isInProgress) article.dataset.demo = project.visual;
     article.dataset.category = project.category;
     article.dataset.name = project.name;
@@ -248,7 +251,7 @@
     } else {
       showcaseMatches.forEach((project, matchIndex) => {
         const projectIndex = projects.indexOf(project);
-        grid.appendChild(makeCard(project, projectIndex));
+        grid.appendChild(makeCard(project, projectIndex, matchIndex));
         if (projectIndex === 0 && matchIndex < showcaseMatches.length - 1) {
           const divider = make("div", "project-divider");
           add(divider,
@@ -259,7 +262,7 @@
         }
       });
     }
-    progressMatches.forEach(project => progressGrid.appendChild(makeCard(project, projects.indexOf(project))));
+    progressMatches.forEach((project, matchIndex) => progressGrid.appendChild(makeCard(project, projects.indexOf(project), matchIndex)));
     count.textContent = searchTerm || activeCategory !== "all"
       ? "Showing " + matches.length + " of " + projects.length + " public repositories"
       : projects.length + " public repositories · " + showcaseMatches.length + " in showcase · " + progressMatches.length + " in progress";
