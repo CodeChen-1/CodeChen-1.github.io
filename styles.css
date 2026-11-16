@@ -364,6 +364,38 @@ button { color: inherit; }
 ::view-transition-old(spotlight-copy), ::view-transition-old(spotlight-art) { animation: spotlight-leave 140ms ease both; }
 ::view-transition-new(spotlight-copy), ::view-transition-new(spotlight-art) { animation: spotlight-enter 390ms cubic-bezier(.2,.75,.25,1) both; }
 
+@media (min-width: 1201px) {
+  :root { --gutter: clamp(22px, 2vw, 34px); }
+  .hero-inner { padding-block: clamp(64px, 6.5vw, 94px) 48px; }
+  .hero-copy { max-width: 600px; padding-block: 28px; }
+  .hero h1 { margin: 34px 0 30px; font-size: clamp(3.75rem, 3rem + 3vw, 5.625rem); line-height: 1.05; letter-spacing: -.06em; }
+  .hero-intro { max-width: 34rem; font-size: clamp(1.0625rem, 1rem + .14vw, 1.125rem); line-height: 1.78; }
+  .hero-actions { margin-top: 36px; gap: 20px 26px; }
+  .hero-ledger { margin-top: clamp(56px, 5vw, 76px); padding-top: 21px; gap: 16px 26px; font-size: .625rem; }
+  .hero-ledger strong { font-size: .875rem; }
+  .spotlight-heading { min-height: 60px; padding: 13px 18px 12px 20px; }
+  .spotlight-heading > div:first-child { gap: 16px; }
+  .spotlight-heading .eyebrow { font-size: .625rem; }
+  .spotlight-position { font-size: .6875rem; }
+  .spotlight-arrow { width: 34px; height: 34px; font-size: 1rem; }
+  .spotlight-view { min-height: 314px; padding: 20px; grid-template-columns: minmax(190px, .8fr) minmax(0, 1.2fr); gap: 20px; }
+  .spotlight-copy { padding: 8px 4px 4px; }
+  .spotlight-kind { margin-bottom: 15px; font-size: .625rem; }
+  .spotlight-copy h2 { margin-bottom: 14px; font-size: clamp(1.75rem, 1.4rem + .8vw, 2.125rem); line-height: 1.1; }
+  .spotlight-description { font-size: clamp(.8125rem, .75rem + .12vw, .875rem); line-height: 1.7; }
+  .spotlight-stack { margin-top: 16px; gap: 6px; }
+  .stack-tag { padding: 5px 8px; font-size: .5625rem; }
+  .spotlight-link { padding-top: 18px; gap: 9px; font-size: .75rem; }
+  .spotlight-stage, .spotlight-stage .project-art { min-height: 276px; }
+  .spotlight-stage .project-art { padding: 16px; }
+  .spotlight-picker { padding-inline: 16px; }
+  .spotlight-pick { min-height: 50px; padding: 8px 6px 7px; gap: 4px; }
+  .spotlight-pick-number { font-size: .625rem; }
+  .spotlight-pick-name { font-size: .6875rem; line-height: 1.25; }
+  .spotlight-hint { padding: 9px 18px 11px; font-size: .5625rem; line-height: 1.4; }
+  .hero-baseline { min-height: 50px; font-size: .625rem; }
+}
+
 @media (max-width: 1080px) { .section-rail { display: none; } }
 @media (max-width: 1000px) {
   .hero-inner { grid-template-columns: 1fr; gap: 38px; padding-top: 55px; }
