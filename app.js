@@ -10,7 +10,6 @@
   const filters = Array.from(document.querySelectorAll(".filter-button"));
   const prefersMotion = window.matchMedia && window.matchMedia("(prefers-reduced-motion: no-preference)").matches;
   let revealObserver = null;
-  let revealInitialCards = false;
   const autoPlayedDemos = new Set();
   const demoTimers = new WeakMap();
   let activeCategory = "all";
@@ -19,19 +18,18 @@
   if (prefersMotion && "IntersectionObserver" in window) {
     revealObserver = new IntersectionObserver(entries => {
       entries.forEach(entry => {
+        const target = entry.target;
+        if (target.hasAttribute("data-reveal")) target.classList.toggle("is-visible", entry.isIntersecting);
         if (!entry.isIntersecting) return;
-        if (entry.target.hasAttribute("data-reveal")) entry.target.classList.add("is-visible");
-        if (entry.target.matches(".project-card[data-demo]")) {
-          const projectName = entry.target.dataset.name;
+        if (target.matches(".project-card[data-demo]")) {
+          const projectName = target.dataset.name;
           if (!autoPlayedDemos.has(projectName)) {
             autoPlayedDemos.add(projectName);
-            playDemo(entry.target);
+            playDemo(target);
           }
         }
-        revealObserver.unobserve(entry.target);
       });
     }, { threshold: 0.08, rootMargin: "0px 0px -28px 0px" });
-    revealInitialCards = true;
     document.documentElement.classList.add("motion-ready");
   }
 
@@ -184,7 +182,7 @@
 
   function makeCard(project, index, revealOrder = 0) {
     const article = make("article", "project-card" + (index === 0 ? " is-featured" : "") + (project.isInProgress ? " is-in-progress" : ""));
-    if (revealInitialCards) {
+    if (revealObserver) {
       article.dataset.reveal = "card";
       article.style.setProperty("--reveal-order", String(Math.min(revealOrder, 4)));
     }
@@ -267,7 +265,6 @@
       ? "Showing " + matches.length + " of " + projects.length + " public repositories"
       : projects.length + " public repositories · " + showcaseMatches.length + " in showcase · " + progressMatches.length + " in progress";
     observeReveals();
-    revealInitialCards = false;
   }
 
   filters.forEach(button => {
