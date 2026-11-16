@@ -278,16 +278,19 @@ button { color: inherit; }
   .repo-link span { transition: transform .18s ease; }
   .repo-link:hover span { transform: translate(2px,-2px); }
   .motion-ready [data-reveal] { opacity: 0; transition: opacity .72s cubic-bezier(.2,.72,.24,1); transition-delay: calc(var(--reveal-order, 0) * 70ms); }
-  .motion-ready [data-reveal="headline"] { clip-path: inset(0 0 100% 0); transition: opacity .36s ease, clip-path .82s cubic-bezier(.16,.76,.23,1); transition-delay: 60ms; }
+  .motion-ready .section-intro[data-reveal] h2,
+  .motion-ready .progress-intro[data-reveal] h2,
+  .motion-ready .about-inner[data-reveal] .about-copy h2 { clip-path: inset(0 0 100% 0); transition: clip-path .82s cubic-bezier(.16,.76,.23,1); transition-delay: 60ms; }
   .motion-ready [data-reveal="hero-panel"] { transition-delay: 120ms; }
   .motion-ready [data-reveal="late"] { transition-delay: 150ms; }
   .motion-ready [data-reveal].is-visible { opacity: 1; }
-  .motion-ready [data-reveal="headline"].is-visible { clip-path: inset(0); }
+  .motion-ready .section-intro[data-reveal].is-visible h2,
+  .motion-ready .progress-intro[data-reveal].is-visible h2,
+  .motion-ready .about-inner[data-reveal].is-visible .about-copy h2 { clip-path: inset(0); }
   @supports (translate: 0 1px) {
     .motion-ready [data-reveal] { translate: 0 26px; scale: .985; transition-property: opacity, translate, scale; transition-duration: .72s, .82s, .82s; transition-timing-function: cubic-bezier(.2,.72,.24,1); }
     .motion-ready [data-reveal="hero-panel"] { translate: 0 32px; scale: .965; transition-delay: 120ms; }
     .motion-ready [data-reveal="late"] { transition-delay: 150ms; }
-    .motion-ready [data-reveal="headline"] { translate: 0 16px; scale: .99; transition-property: opacity, clip-path, translate, scale; transition-duration: .36s, .82s, .72s, .72s; transition-delay: 60ms; }
     .motion-ready [data-reveal].is-visible { translate: 0 0; scale: 1; }
   }
   .motion-ready .project-mix .mix-track b { transform: scaleX(0); transform-origin: left; }
