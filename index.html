@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="theme-color" content="#f3f1e8">
+  <meta name="theme-color" content="#151725">
   <meta name="description" content="A portfolio of Android apps, full-stack web projects, and computer-vision tools by CodeChen-1.">
   <meta property="og:type" content="website">
   <meta property="og:title" content="CodeChen-1 — Software portfolio">
@@ -11,7 +11,7 @@
   <meta property="og:image" content="https://github.com/CodeChen-1.png">
   <title>CodeChen-1 — Software portfolio</title>
   <link rel="icon" href="favicon.svg" type="image/svg+xml">
-  <link rel="stylesheet" href="styles.css?v=20261117-2">
+  <link rel="stylesheet" href="styles.css?v=20261117-3">
 </head>
 <body>
   <a class="skip-link" href="#main">Skip to content</a>
@@ -35,55 +35,63 @@
   </header>
 
   <main id="main">
-    <section class="hero section-wrap" id="top" aria-labelledby="hero-title">
-      <div class="hero-copy" data-reveal="hero">
-        <p class="eyebrow"><span class="status-dot" aria-hidden="true"></span> SOFTWARE PORTFOLIO <span class="eyebrow-divider">/</span> CODECHEN-1</p>
-        <h1 id="hero-title">Useful software,<br><em>built end to end.</em></h1>
-        <p class="hero-intro">A collection of Android apps, full-stack systems, and computer-vision tools—each built around a practical task, from planning a day to reading a camera feed.</p>
-        <div class="hero-actions">
-          <a class="button button-dark" href="#work">Explore the projects <span aria-hidden="true">↘</span></a>
-          <a class="text-link" href="https://github.com/CodeChen-1" target="_blank" rel="noreferrer">Visit GitHub profile <span aria-hidden="true">↗</span></a>
+    <section class="hero" id="top" aria-labelledby="hero-title">
+      <div class="hero-inner section-wrap">
+        <div class="hero-copy" data-reveal="hero">
+          <p class="eyebrow"><span class="status-dot" aria-hidden="true"></span> CODECHEN-1 <span class="eyebrow-divider">/</span> SOFTWARE FIELD GUIDE</p>
+          <h1 id="hero-title">Make it<br><em>make sense.</em></h1>
+          <p class="hero-intro">I build practical software that turns incoming information into something people can understand, organize, or act on.</p>
+          <div class="hero-actions">
+            <a class="button button-dark" href="#work">Enter the project index <span aria-hidden="true">↓</span></a>
+            <a class="text-link text-link-light" href="https://github.com/CodeChen-1" target="_blank" rel="noreferrer">GitHub profile <span aria-hidden="true">↗</span></a>
+          </div>
+          <div class="hero-ledger" aria-label="Portfolio contents">
+            <span><strong>07</strong> PUBLIC PROJECTS</span>
+            <span><strong>01</strong> IN PROGRESS</span>
+            <span><strong>03</strong> AREAS OF WORK</span>
+          </div>
         </div>
-        <p class="hero-note"><span class="note-rule" aria-hidden="true"></span> Eight public repositories, gathered in one place.</p>
-      </div>
 
-      <aside class="project-mix" data-reveal="hero-panel" aria-label="Portfolio project areas">
-        <div class="mix-heading"><span>PROJECT MIX</span><span>INDEX / 08</span></div>
-        <div class="mix-row">
-          <span class="mix-index">01</span>
-          <div class="mix-copy"><strong>Mobile apps</strong><span>Android · Kotlin</span><i class="mix-track"><b style="--fill: 100%"></b></i></div>
-          <span class="mix-count">03</span>
-        </div>
-        <div class="mix-row">
-          <span class="mix-index">02</span>
-          <div class="mix-copy"><strong>Web systems</strong><span>Full-stack · workflows</span><i class="mix-track"><b style="--fill: 68%"></b></i></div>
-          <span class="mix-count">02</span>
-        </div>
-        <div class="mix-row">
-          <span class="mix-index">03</span>
-          <div class="mix-copy"><strong>Computer vision</strong><span>Documents · vehicles</span><i class="mix-track"><b style="--fill: 68%"></b></i></div>
-          <span class="mix-count">02</span>
-        </div>
-        <div class="mix-footer"><span>Public work</span><span>+ one in-progress repository</span></div>
-      </aside>
+        <section class="spotlight demo-scope" aria-labelledby="spotlight-title">
+          <div class="spotlight-heading">
+            <div>
+              <p class="eyebrow"><span class="eyebrow-number">FIELD NOTE</span> THE VISITOR'S PICK</p>
+              <span class="spotlight-position" id="spotlight-position">01 / 07</span>
+            </div>
+            <div class="spotlight-arrows" aria-label="Choose a featured project">
+              <button class="spotlight-arrow" type="button" id="spotlight-prev" aria-label="Previous project">←</button>
+              <button class="spotlight-arrow" type="button" id="spotlight-next" aria-label="Next project">→</button>
+            </div>
+          </div>
+          <div class="spotlight-view" id="spotlight-view" aria-live="polite">
+            <div class="spotlight-copy">
+              <p class="spotlight-kind" id="spotlight-kind"></p>
+              <h2 id="spotlight-title"></h2>
+              <p class="spotlight-description" id="spotlight-description"></p>
+              <div class="spotlight-stack" id="spotlight-stack" aria-label="Project technologies"></div>
+              <a class="spotlight-link" id="spotlight-link" href="#">
+                Open this project <span aria-hidden="true">↗</span>
+              </a>
+            </div>
+            <div class="spotlight-stage" id="spotlight-stage"></div>
+          </div>
+          <div class="spotlight-picker" id="spotlight-picker" aria-label="Choose a project"></div>
+          <p class="spotlight-hint">A different project is selected on each visit. Use the index to explore.</p>
+        </section>
+      </div>
+      <div class="hero-baseline section-wrap" aria-hidden="true">
+        <span>ANDROID / WEB / COMPUTER VISION</span>
+        <span>CAPTURE&nbsp; — &nbsp;INTERPRET&nbsp; — &nbsp;MOVE FORWARD</span>
+      </div>
     </section>
-
-    <div class="signal-strip" aria-label="Project themes">
-      <div class="signal-inner" data-reveal>
-        <span>01 / PLAN</span><span class="signal-line" aria-hidden="true"></span>
-        <span>02 / INTERPRET</span><span class="signal-line" aria-hidden="true"></span>
-        <span>03 / ACT</span><span class="signal-symbol" aria-hidden="true">✳</span>
-        <span class="signal-tail">SOFTWARE THAT GETS TO THE POINT</span>
-      </div>
-    </div>
 
     <section class="work-section section-wrap" id="work" aria-labelledby="work-title">
       <div class="section-intro" data-reveal>
         <div>
-          <p class="eyebrow"><span class="eyebrow-number">01</span> THE WORK</p>
-          <h2 id="work-title">Projects, in context.</h2>
+          <p class="eyebrow"><span class="eyebrow-number">01</span> THE INDEX</p>
+          <h2 id="work-title">Browse the systems.</h2>
         </div>
-        <p class="section-summary">Each card pairs a short workflow preview with the problem it solves, its key features, and the tools behind it.</p>
+        <p class="section-summary">Seven public projects, explained through their purpose, core workflow, and the tools behind them. Open any repository for the source and setup.</p>
       </div>
 
       <div class="project-controls" data-reveal="late">
@@ -148,6 +156,6 @@
   </footer>
 
   <script src="projects.js"></script>
-  <script src="app.js?v=20261117-2"></script>
+  <script src="app.js?v=20261117-3"></script>
 </body>
 </html>

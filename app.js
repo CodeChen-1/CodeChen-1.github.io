@@ -2,6 +2,7 @@
   "use strict";
 
   const projects = Array.isArray(window.PORTFOLIO_PROJECTS) ? window.PORTFOLIO_PROJECTS : [];
+  const showcaseProjects = projects.filter(project => !project.isInProgress);
   const grid = document.querySelector("#project-grid");
   const progressSection = document.querySelector("#in-progress");
   const progressGrid = document.querySelector("#in-progress-grid");
@@ -11,14 +12,52 @@
   const sectionLinks = Array.from(document.querySelectorAll("[data-section-link]"));
   const sectionRail = document.querySelector(".section-rail");
   const main = document.querySelector("#main");
+  const spotlight = document.querySelector(".spotlight");
+  const spotlightView = document.querySelector("#spotlight-view");
+  const spotlightStage = document.querySelector("#spotlight-stage");
+  const spotlightPosition = document.querySelector("#spotlight-position");
+  const spotlightKind = document.querySelector("#spotlight-kind");
+  const spotlightTitle = document.querySelector("#spotlight-title");
+  const spotlightDescription = document.querySelector("#spotlight-description");
+  const spotlightStack = document.querySelector("#spotlight-stack");
+  const spotlightLink = document.querySelector("#spotlight-link");
+  const spotlightPicker = document.querySelector("#spotlight-picker");
+  const spotlightKey = "codechen-portfolio-last-featured";
   const prefersMotion = window.matchMedia && window.matchMedia("(prefers-reduced-motion: no-preference)").matches;
+  const demoTimers = new WeakMap();
   let revealObserver = null;
   let sectionObserver = null;
   let sectionRailFrame = 0;
-  const autoPlayedDemos = new Set();
-  const demoTimers = new WeakMap();
+  let selectedSpotlightIndex = -1;
+  let spotlightRequest = 0;
   let activeCategory = "all";
   let searchTerm = "";
+
+  function make(tag, className, text) {
+    const node = document.createElement(tag);
+    if (className) node.className = className;
+    if (text !== undefined) node.textContent = text;
+    return node;
+  }
+
+  function add(parent, ...children) {
+    children.forEach(child => child && parent.appendChild(child));
+  }
+
+  function row(className, left, right) {
+    const node = make("div", className);
+    add(node, make("span", "", left), make("span", "", right));
+    return node;
+  }
+
+  function setActiveSection(sectionId) {
+    sectionLinks.forEach(link => {
+      const active = link.hash === "#" + sectionId;
+      link.classList.toggle("is-active", active);
+      if (active) link.setAttribute("aria-current", "location");
+      else link.removeAttribute("aria-current");
+    });
+  }
 
   function setupSectionObserver() {
     if (!("IntersectionObserver" in window)) return;
@@ -33,19 +72,10 @@
         Math.abs(entry.boundingClientRect.top - marker) < Math.abs(closest.boundingClientRect.top - marker) ? entry : closest
       );
       setActiveSection(activeEntry.target.id);
-    }, { rootMargin: `-${topInset}px 0px -${bottomInset}px 0px`, threshold: 0 });
+    }, { rootMargin: "-" + topInset + "px 0px -" + bottomInset + "px 0px", threshold: 0 });
     sectionLinks.forEach(link => {
       const section = document.querySelector(link.hash);
       if (section && !link.hidden && !section.hidden) sectionObserver.observe(section);
-    });
-  }
-
-  function setActiveSection(sectionId) {
-    sectionLinks.forEach(link => {
-      const active = link.hash === "#" + sectionId;
-      link.classList.toggle("is-active", active);
-      if (active) link.setAttribute("aria-current", "location");
-      else link.removeAttribute("aria-current");
     });
   }
 
@@ -58,8 +88,8 @@
     const bottom = Math.min(bottomLimit, mainBounds.bottom);
     const height = Math.max(0, bottom - top);
     const visibleLinkCount = sectionLinks.filter(link => !link.hidden).length;
-    sectionRail.style.setProperty("--section-rail-top", `${Math.round(top)}px`);
-    sectionRail.style.setProperty("--section-rail-height", `${Math.floor(height)}px`);
+    sectionRail.style.setProperty("--section-rail-top", Math.round(top) + "px");
+    sectionRail.style.setProperty("--section-rail-height", Math.floor(height) + "px");
     sectionRail.classList.toggle("is-within-main", height >= visibleLinkCount * 36);
   }
 
@@ -97,68 +127,29 @@
     updateSectionRailBounds();
   }
 
-  sectionLinks.forEach(link => link.addEventListener("click", () => setActiveSection(link.hash.slice(1))));
-  setActiveSection("top");
-  setupSectionObserver();
-  let sectionObserverResizeFrame = 0;
-  window.addEventListener("scroll", scheduleSectionRailBounds, { passive: true });
-  window.addEventListener("resize", () => {
-    if (sectionObserverResizeFrame) window.cancelAnimationFrame(sectionObserverResizeFrame);
-    sectionObserverResizeFrame = window.requestAnimationFrame(() => {
-      sectionObserverResizeFrame = 0;
-      setupSectionObserver();
-      updateSectionRailBounds();
-    });
-  }, { passive: true });
-
-  if (prefersMotion && "IntersectionObserver" in window) {
-    revealObserver = new IntersectionObserver(entries => {
-      entries.forEach(entry => {
-        const target = entry.target;
-        if (target.hasAttribute("data-reveal")) target.classList.toggle("is-visible", entry.isIntersecting);
-        if (!entry.isIntersecting) return;
-        if (target.matches(".project-card[data-demo]")) {
-          const projectName = target.dataset.name;
-          if (!autoPlayedDemos.has(projectName)) {
-            autoPlayedDemos.add(projectName);
-            playDemo(target);
-          }
-        }
-      });
-    }, { threshold: 0.08, rootMargin: "0px 0px -28px 0px" });
-    document.documentElement.classList.add("motion-ready");
+  function stopDemo(scope) {
+    const timer = demoTimers.get(scope);
+    if (timer) window.clearTimeout(timer);
+    demoTimers.delete(scope);
+    scope.classList.remove("is-demo-playing");
+    const replay = scope.querySelector(".demo-replay");
+    const replayLabel = replay && replay.querySelector(".demo-replay-label");
+    const title = scope.dataset.projectTitle || (scope.querySelector("h1, h2, h3") || {}).textContent || "project";
+    if (replayLabel) replayLabel.textContent = "Replay workflow";
+    if (replay) replay.setAttribute("aria-label", "Replay workflow demo for " + title);
   }
 
-  const make = (tag, className, text) => {
-    const node = document.createElement(tag);
-    if (className) node.className = className;
-    if (text !== undefined) node.textContent = text;
-    return node;
-  };
-  const add = (parent, ...children) => children.forEach(child => child && parent.appendChild(child));
-  const row = (className, left, right) => {
-    const node = make("div", className);
-    add(node, make("span", "", left), make("span", "", right));
-    return node;
-  };
-
-  function playDemo(card) {
-    if (!prefersMotion) return;
-    const previousTimer = demoTimers.get(card);
-    if (previousTimer) window.clearTimeout(previousTimer);
-    const replay = card.querySelector(".demo-replay");
+  function playDemo(scope) {
+    if (!prefersMotion || !scope) return;
+    stopDemo(scope);
+    const replay = scope.querySelector(".demo-replay");
     const replayLabel = replay && replay.querySelector(".demo-replay-label");
+    const title = scope.dataset.projectTitle || (scope.querySelector("h1, h2, h3") || {}).textContent || "project";
     if (replayLabel) replayLabel.textContent = "Playing demo";
-    if (replay) replay.setAttribute("aria-label", "Playing workflow demo for " + card.querySelector("h3").textContent);
-    card.classList.remove("is-demo-playing");
-    void card.offsetWidth;
-    card.classList.add("is-demo-playing");
-    demoTimers.set(card, window.setTimeout(() => {
-      card.classList.remove("is-demo-playing");
-      if (replayLabel) replayLabel.textContent = "Replay demo";
-      if (replay) replay.setAttribute("aria-label", "Replay workflow demo for " + card.querySelector("h3").textContent);
-      demoTimers.delete(card);
-    }, 4800));
+    if (replay) replay.setAttribute("aria-label", "Playing workflow demo for " + title);
+    void scope.offsetWidth;
+    scope.classList.add("is-demo-playing");
+    demoTimers.set(scope, window.setTimeout(() => stopDemo(scope), 4800));
   }
 
   function observeReveals() {
@@ -167,22 +158,17 @@
       node.dataset.revealObserved = "true";
       revealObserver.observe(node);
     });
-    document.querySelectorAll(".project-card[data-demo]:not([data-demo-observed])").forEach(node => {
-      node.dataset.demoObserved = "true";
-      if (!autoPlayedDemos.has(node.dataset.name)) revealObserver.observe(node);
-    });
   }
 
-  function clearGrid(container) {
-    if (revealObserver) {
-      container.querySelectorAll("[data-reveal-observed], [data-demo-observed]").forEach(node => revealObserver.unobserve(node));
-    }
-    container.querySelectorAll(".project-card").forEach(card => {
-      const timer = demoTimers.get(card);
-      if (timer) window.clearTimeout(timer);
-      demoTimers.delete(card);
-    });
-    container.replaceChildren();
+  if (prefersMotion && "IntersectionObserver" in window) {
+    revealObserver = new IntersectionObserver(entries => {
+      entries.forEach(entry => {
+        if (entry.target.hasAttribute("data-reveal")) {
+          entry.target.classList.toggle("is-visible", entry.isIntersecting);
+        }
+      });
+    }, { threshold: 0.08, rootMargin: "0px 0px -28px 0px" });
+    document.documentElement.classList.add("motion-ready");
   }
 
   function makeVisual(project) {
@@ -197,7 +183,7 @@
       replay.setAttribute("aria-label", "Play five-second workflow demo for " + project.title);
       add(replay,
         make("span", "demo-replay-symbol", "▶"),
-        make("span", "demo-replay-label", "Play demo"),
+        make("span", "demo-replay-label", "Replay workflow"),
         make("span", "demo-replay-duration", "05 SEC")
       );
       kicker.appendChild(replay);
@@ -276,18 +262,135 @@
     return art;
   }
 
+  function saveFeaturedProject(project) {
+    try {
+      window.localStorage.setItem(spotlightKey, project.name);
+    } catch (_) {
+      // Storage can be disabled in private browsing; the project picker still works.
+    }
+  }
+
+  function firstVisitProjectIndex() {
+    if (!showcaseProjects.length) return -1;
+    let previousName = "";
+    try {
+      previousName = window.localStorage.getItem(spotlightKey) || "";
+    } catch (_) {
+      // Fall back to a random selection when storage is unavailable.
+    }
+    const choices = showcaseProjects
+      .map((project, index) => ({ project, index }))
+      .filter(entry => showcaseProjects.length < 2 || entry.project.name !== previousName);
+    const random = new Uint32Array(1);
+    let value = Math.random();
+    if (window.crypto && window.crypto.getRandomValues) {
+      window.crypto.getRandomValues(random);
+      value = random[0] / 4294967296;
+    }
+    return choices[Math.floor(value * choices.length)].index;
+  }
+
+  function buildSpotlightPicker() {
+    if (!spotlightPicker) return;
+    spotlightPicker.replaceChildren();
+    showcaseProjects.forEach((project, index) => {
+      const button = make("button", "spotlight-pick");
+      button.type = "button";
+      button.dataset.projectIndex = String(index);
+      button.setAttribute("aria-label", "Feature " + project.title);
+      button.setAttribute("aria-pressed", "false");
+      add(button,
+        make("span", "spotlight-pick-number", String(index + 1).padStart(2, "0")),
+        make("span", "spotlight-pick-name", project.title)
+      );
+      button.addEventListener("click", () => {
+        showSpotlight(index, index >= selectedSpotlightIndex ? 1 : -1);
+      });
+      spotlightPicker.appendChild(button);
+    });
+  }
+
+  function updateSpotlight(projectIndex) {
+    const project = showcaseProjects[projectIndex];
+    if (!project || !spotlight) return;
+    selectedSpotlightIndex = projectIndex;
+    spotlight.dataset.projectTitle = project.title;
+    spotlightPosition.textContent = String(projectIndex + 1).padStart(2, "0") + " / " + String(showcaseProjects.length).padStart(2, "0");
+    spotlightKind.textContent = project.kind;
+    spotlightTitle.textContent = project.title;
+    spotlightDescription.textContent = project.description;
+    spotlightLink.href = project.repo;
+    spotlightLink.setAttribute("aria-label", "Open " + project.name + " on GitHub");
+    spotlightStack.replaceChildren();
+    project.stack.forEach(label => spotlightStack.appendChild(make("span", "stack-tag", label)));
+    spotlightStage.replaceChildren(makeVisual(project));
+    const replay = spotlightStage.querySelector(".demo-replay");
+    if (replay) replay.addEventListener("click", () => playDemo(spotlight));
+    spotlightPicker.querySelectorAll(".spotlight-pick").forEach(button => {
+      const selected = Number(button.dataset.projectIndex) === projectIndex;
+      button.setAttribute("aria-pressed", String(selected));
+      if (selected) button.setAttribute("aria-current", "true");
+      else button.removeAttribute("aria-current");
+    });
+    saveFeaturedProject(project);
+  }
+
+  function showSpotlight(projectIndex, direction, initial = false) {
+    if (!showcaseProjects.length) return;
+    const nextIndex = (projectIndex + showcaseProjects.length) % showcaseProjects.length;
+    if (nextIndex === selectedSpotlightIndex && !initial) return;
+    const request = ++spotlightRequest;
+    selectedSpotlightIndex = nextIndex;
+    if (spotlight) stopDemo(spotlight);
+    if (initial || !prefersMotion) {
+      updateSpotlight(nextIndex);
+      return;
+    }
+
+    spotlightView.dataset.direction = direction >= 0 ? "next" : "previous";
+    if (typeof spotlightView.startViewTransition === "function") {
+      const transition = spotlightView.startViewTransition(() => {
+        if (request === spotlightRequest) updateSpotlight(nextIndex);
+      });
+      transition.ready.catch(() => {});
+      transition.updateCallbackDone
+        .then(() => {
+          if (request === spotlightRequest) playDemo(spotlight);
+        })
+        .catch(() => {});
+      return;
+    } else {
+      updateSpotlight(nextIndex);
+      if (typeof Element.prototype.animate === "function") {
+        const offset = direction >= 0 ? "18px" : "-18px";
+        [spotlightView.querySelector(".spotlight-copy"), spotlightStage].forEach((element, index) => {
+          element.animate([
+            { opacity: 0, transform: "translateX(" + offset + ")" },
+            { opacity: 1, transform: "translateX(0)" }
+          ], { duration: index === 0 ? 390 : 500, easing: "cubic-bezier(.2,.75,.25,1)" });
+        });
+      }
+    }
+    playDemo(spotlight);
+  }
+
+  function playCardDemo(card, project) {
+    card.dataset.projectTitle = project.title;
+    const replay = card.querySelector(".demo-replay");
+    if (replay) replay.addEventListener("click", () => playDemo(card));
+  }
+
   function makeCard(project, index, revealOrder = 0) {
-    const article = make("article", "project-card" + (index === 0 ? " is-featured" : "") + (project.isInProgress ? " is-in-progress" : ""));
+    const article = make("article", "project-card" + (project.isInProgress ? " is-in-progress" : ""));
     if (revealObserver) {
       article.dataset.reveal = "card";
       article.style.setProperty("--reveal-order", String(Math.min(revealOrder, 4)));
     }
-    if (!project.isInProgress) article.dataset.demo = project.visual;
     article.dataset.category = project.category;
     article.dataset.name = project.name;
+    article.dataset.projectTitle = project.title;
     const art = makeVisual(project);
     const content = make("div", "project-content");
-    if (index === 0) content.appendChild(make("span", "featured-project-label", "Featured project"));
     const topline = make("div", "project-topline");
     add(topline,
       make("span", "project-number", String(index + 1).padStart(2, "0") + " / " + project.kind),
@@ -315,18 +418,27 @@
     if (project.stack.length) content.appendChild(stack);
     content.appendChild(footer);
     add(article, art, content);
-    const replay = art.querySelector(".demo-replay");
-    if (replay) replay.addEventListener("click", () => playDemo(article));
+    playCardDemo(article, project);
     return article;
   }
 
   function matchingProjects() {
     return projects.filter(project => {
       const categoryMatches = activeCategory === "all" || project.category === activeCategory;
-      const haystack = [project.name, project.title, project.kind, project.state, project.description].concat(project.features, project.stack).join(" ").toLowerCase();
+      const haystack = [project.name, project.title, project.kind, project.state, project.description]
+        .concat(project.features, project.stack).join(" ").toLowerCase();
       return categoryMatches && haystack.includes(searchTerm);
     });
   }
+
+  function clearGrid(container) {
+    if (revealObserver) {
+      container.querySelectorAll("[data-reveal-observed]").forEach(node => revealObserver.unobserve(node));
+    }
+    container.querySelectorAll(".project-card").forEach(stopDemo);
+    container.replaceChildren();
+  }
+
   function render() {
     const matches = matchingProjects();
     const showcaseMatches = matches.filter(project => !project.isInProgress);
@@ -335,9 +447,10 @@
     clearGrid(progressGrid);
     progressSection.hidden = progressMatches.length === 0;
     refreshSectionNavigation();
+
     if (!matches.length) {
       const empty = make("div", "no-results");
-      add(empty, make("strong", "", "No matching projects."), make("span", "", "Try a different search or choose another project area."));
+      add(empty, make("strong", "", "No matching projects."), make("span", "", "Try another search or choose another project area."));
       grid.appendChild(empty);
     } else if (!showcaseMatches.length) {
       const empty = make("div", "no-results");
@@ -345,24 +458,54 @@
       grid.appendChild(empty);
     } else {
       showcaseMatches.forEach((project, matchIndex) => {
-        const projectIndex = projects.indexOf(project);
-        grid.appendChild(makeCard(project, projectIndex, matchIndex));
-        if (projectIndex === 0 && matchIndex < showcaseMatches.length - 1) {
-          const divider = make("div", "project-divider");
-          add(divider,
-            make("h3", "", "More projects"),
-            make("span", "", String(showcaseMatches.length - 1).padStart(2, "0") + " projects")
-          );
-          grid.appendChild(divider);
-        }
+        grid.appendChild(makeCard(project, projects.indexOf(project), matchIndex));
       });
     }
-    progressMatches.forEach((project, matchIndex) => progressGrid.appendChild(makeCard(project, projects.indexOf(project), matchIndex)));
+    progressMatches.forEach((project, matchIndex) => {
+      progressGrid.appendChild(makeCard(project, projects.indexOf(project), matchIndex));
+    });
     count.textContent = searchTerm || activeCategory !== "all"
-      ? "Showing " + matches.length + " of " + projects.length + " public repositories"
-      : projects.length + " public repositories · " + showcaseMatches.length + " in showcase · " + progressMatches.length + " in progress";
+      ? "Showing " + matches.length + " of " + projects.length + " repositories"
+      : projects.length + " repositories · " + showcaseMatches.length + " public · " + progressMatches.length + " in progress";
     observeReveals();
   }
+
+  function selectFeatured(index, direction) {
+    showSpotlight(index, direction);
+  }
+
+  sectionLinks.forEach(link => link.addEventListener("click", () => setActiveSection(link.hash.slice(1))));
+  setActiveSection("top");
+  setupSectionObserver();
+  window.addEventListener("scroll", scheduleSectionRailBounds, { passive: true });
+  window.addEventListener("resize", () => {
+    if (sectionRailFrame) window.cancelAnimationFrame(sectionRailFrame);
+    sectionRailFrame = window.requestAnimationFrame(() => {
+      sectionRailFrame = 0;
+      setupSectionObserver();
+      updateSectionRailBounds();
+    });
+  }, { passive: true });
+
+  buildSpotlightPicker();
+  const initialSpotlightIndex = firstVisitProjectIndex();
+  if (initialSpotlightIndex >= 0) {
+    updateSpotlight(initialSpotlightIndex);
+    playDemo(spotlight);
+  }
+  document.querySelector("#spotlight-prev").addEventListener("click", () => {
+    selectFeatured(selectedSpotlightIndex - 1, -1);
+  });
+  document.querySelector("#spotlight-next").addEventListener("click", () => {
+    selectFeatured(selectedSpotlightIndex + 1, 1);
+  });
+  spotlight.addEventListener("keydown", event => {
+    if (event.target === spotlight || event.target === spotlightView) return;
+    if ((event.key === "ArrowLeft" || event.key === "ArrowRight") && !/^(A|BUTTON|INPUT)$/.test(event.target.tagName)) {
+      event.preventDefault();
+      selectFeatured(selectedSpotlightIndex + (event.key === "ArrowRight" ? 1 : -1), event.key === "ArrowRight" ? 1 : -1);
+    }
+  });
 
   filters.forEach(button => {
     button.addEventListener("click", () => {
@@ -391,5 +534,6 @@
       render();
     }
   });
+
   render();
 })();
