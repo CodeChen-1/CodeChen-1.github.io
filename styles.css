@@ -261,8 +261,10 @@ button { color: inherit; }
 .about-index > div > span { grid-row: span 2; align-self: start; padding-top: 3px; color: var(--blue-soft); font: 9px/1.4 var(--font-mono); }
 .about-index strong { font-size: 12px; font-weight: 600; }
 .about-index small { color: #a6a7b3; font: 9px/1.5 var(--font-mono); }
-.site-footer { min-height: 100px; display: flex; align-items: center; justify-content: space-between; gap: 22px; }
-.site-footer > p { margin: 0; color: var(--muted); font: 9px/1.4 var(--font-mono); }
+.site-footer { min-height: 100px; display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 22px; }
+.footer-copy { min-width: 0; max-width: 620px; flex: 1 1 420px; display: grid; gap: 6px; }
+.footer-copy > p { margin: 0; color: var(--muted); font: 10px/1.45 var(--font-mono); }
+.footer-copy .footer-disclosure { color: #777984; font: 10px/1.5 var(--font-body); }
 .footer-link { color: var(--blue-deep); }
 
 @keyframes workflow-sweep { 0% { opacity: 0; transform: translateX(-120%); } 8% { opacity: 1; } 92% { opacity: .72; } 100% { opacity: 0; transform: translateX(360%); } }
@@ -505,7 +507,7 @@ button { color: inherit; }
   .art-camera span:last-child { font-size: 6px; }
   .art-event { font-size: 6px; }
   .site-footer { min-height: 0; padding-block: 22px; align-items: flex-start; flex-direction: column; gap: 12px; }
-  .site-footer > p { order: 3; }
+  .footer-copy { width: 100%; flex: none; order: 3; }
 }
 @media (max-width: 340px) {
   :root { --gutter: 14px; }
