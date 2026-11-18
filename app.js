@@ -232,14 +232,43 @@
       const footer = make("div", "art-doc-footer");
       add(footer, make("span", "", "CAPTURE → DETECT"), make("strong", "", "PDF"));
       add(art, documentShape, footer);
+    } else if (project.visual === "data") {
+      const dashboard = make("div", "art-data-dashboard");
+      dashboard.setAttribute("aria-hidden", "true");
+      const header = make("div", "art-data-head");
+      add(header, make("strong", "", "AUSTRALIA / ROAD SAFETY"), make("span", "", "2020—24"));
+
+      const panels = make("div", "art-data-panels");
+      const mapPanel = make("div", "art-data-panel art-data-map-panel");
+      mapPanel.appendChild(make("span", "art-data-label", "STATE MAP"));
+      const map = make("div", "art-data-map");
+      map.appendChild(make("i", "art-data-land"));
+      for (let n = 0; n < 4; n += 1) map.appendChild(make("i", "art-data-pin"));
+      mapPanel.appendChild(map);
+
+      const chartPanel = make("div", "art-data-panel art-data-chart-panel");
+      chartPanel.appendChild(make("span", "art-data-label", "ENFORCEMENT TRENDS"));
+      const chart = make("div", "art-data-chart");
+      [["20", 42], ["21", 60], ["22", 48], ["23", 78], ["24", 66]].forEach(([year, height]) => {
+        const column = make("div", "art-data-column");
+        column.style.setProperty("--bar-height", height + "%");
+        add(column, make("i"), make("span", "", year));
+        chart.appendChild(column);
+      });
+      chartPanel.appendChild(chart);
+      add(panels, mapPanel, chartPanel);
+
+      const footer = make("div", "art-data-foot", "FINES  /  TESTS  /  DETECTIONS");
+      add(dashboard, header, panels, footer);
+      art.appendChild(dashboard);
     } else if (project.visual === "progress") {
       const panel = make("div", "art-progress-panel");
       const status = make("div", "art-progress-status");
       add(status, make("i"), make("strong", "", "In development"));
       const details = make("div", "art-progress-meta");
       add(details,
-        row("art-progress-row", "SOURCE FILES", "NOT PUBLIC YET"),
-        row("art-progress-row", "README", "NOT AVAILABLE YET")
+        row("art-progress-row", "SOURCE FILES", project.hasSource ? "PUBLIC" : "NOT PUBLIC YET"),
+        row("art-progress-row", "README", project.hasReadme ? "AVAILABLE" : "NOT AVAILABLE YET")
       );
       add(panel, status, make("div", "art-progress-divider"), details);
       art.appendChild(panel);
@@ -390,7 +419,10 @@
     stack.setAttribute("aria-label", "Technology stack");
     project.stack.forEach(label => stack.appendChild(make("span", "stack-tag", label)));
     const footer = make("div", "project-footer");
-    const note = project.testing || (project.isInProgress ? "Source files and README not public yet." : (project.category === "vision" ? "See the repository README for requirements and setup." : ""));
+    const progressNote = project.hasSource
+      ? "Public source files; README not available yet."
+      : "Source files and README not public yet.";
+    const note = project.testing || (project.isInProgress ? progressNote : (project.category === "vision" ? "See the repository README for requirements and setup." : ""));
     const test = make("span", "project-test", note);
     const link = make("a", "repo-link", "View repository");
     link.href = project.repo;

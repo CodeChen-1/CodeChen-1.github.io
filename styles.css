@@ -195,6 +195,25 @@ button { color: inherit; }
 .art-scan-beam { position: absolute; top: 11px; right: 7px; left: 7px; height: 2px; opacity: 0; background: linear-gradient(90deg, transparent, rgb(86 100 255 / 35%) 50%, transparent); }
 .art-doc-footer { display: flex; justify-content: center; gap: 14px; color: #65697c; font: 7px/1 var(--font-mono); }
 .art-doc-footer strong { color: var(--blue-deep); font-weight: 600; }
+.art-data-dashboard { width: min(100%, 450px); margin: auto; padding: 9px; display: grid; gap: 7px; border: 1px solid #acb0d5; background: rgb(251 250 255 / 92%); }
+.art-data-head, .art-data-foot { display: flex; justify-content: space-between; gap: 8px; color: #656781; font: 7px/1.3 var(--font-mono); letter-spacing: .035em; }
+.art-data-head strong { color: var(--blue-deep); font-weight: 600; }
+.art-data-panels { display: grid; grid-template-columns: .9fr 1.1fr; gap: 7px; }
+.art-data-panel { min-width: 0; padding: 6px 7px; border: 1px solid #d2d4eb; background: #fbfaf7; }
+.art-data-label { display: block; color: #737587; font: 6px/1.3 var(--font-mono); letter-spacing: .04em; }
+.art-data-map { min-height: 53px; position: relative; display: grid; place-items: center; overflow: hidden; }
+.art-data-land { width: 68px; height: 45px; display: block; background: linear-gradient(90deg, transparent 32%, #b8bddc 33%, transparent 34%), linear-gradient(0deg, transparent 42%, #b8bddc 43%, transparent 44%), linear-gradient(90deg, #e3e5ff, #cbd0f8); clip-path: polygon(10% 45%, 18% 31%, 32% 27%, 38% 15%, 53% 18%, 66% 25%, 83% 28%, 93% 43%, 84% 51%, 80% 66%, 64% 70%, 57% 84%, 43% 76%, 34% 63%, 20% 65%, 13% 56%); }
+.art-data-map::after { content: ""; position: absolute; right: 14px; bottom: 4px; width: 4px; height: 5px; border-radius: 50% 50% 55% 45%; background: #cbd0f8; }
+.art-data-pin { width: 4px; height: 4px; position: absolute; z-index: 1; border: 1px solid #fbfaf7; border-radius: 50%; background: var(--blue); box-shadow: 0 0 0 1px var(--blue); }
+.art-data-pin:nth-child(2) { top: 20px; left: 34%; }
+.art-data-pin:nth-child(3) { top: 29px; left: 52%; }
+.art-data-pin:nth-child(4) { top: 24px; left: 68%; }
+.art-data-pin:nth-child(5) { top: 36px; left: 60%; }
+.art-data-chart { height: 53px; margin-top: 1px; padding: 3px 3px 0; display: flex; align-items: stretch; gap: 5px; border-bottom: 1px solid #cfd1e2; background: repeating-linear-gradient(to bottom, transparent 0 13px, #e8e9f1 13px 14px); }
+.art-data-column { min-width: 0; flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: flex-end; gap: 3px; }
+.art-data-column i { width: 100%; height: var(--bar-height); display: block; border: 1px solid #9298e8; background: linear-gradient(180deg, #dce0ff, #7e88ef); transform-origin: bottom; }
+.art-data-column span { color: #737587; font: 6px/1 var(--font-mono); }
+.art-data-foot { justify-content: flex-start; color: #74778a; font-size: 6px; }
 .project-art--progress { background-color: #ececff; }
 .art-progress-panel { width: min(100%, 390px); margin: auto; padding: 15px; display: grid; gap: 11px; border: 1px solid #acb0d5; background: rgb(251 250 255 / 91%); }
 .art-progress-status { display: flex; align-items: center; gap: 9px; color: var(--blue-deep); font: 600 9px/1.4 var(--font-mono); letter-spacing: .04em; text-transform: uppercase; }
@@ -308,7 +327,8 @@ button { color: inherit; }
   .demo-scope.is-demo-playing .art-score, .project-card.is-demo-playing .art-score,
   .demo-scope.is-demo-playing .art-document, .project-card.is-demo-playing .art-document,
   .demo-scope.is-demo-playing .art-doc-lines i, .project-card.is-demo-playing .art-doc-lines i,
-  .demo-scope.is-demo-playing .art-doc-footer, .project-card.is-demo-playing .art-doc-footer { animation: workflow-step .7s cubic-bezier(.2,.75,.25,1) both; }
+  .demo-scope.is-demo-playing .art-doc-footer, .project-card.is-demo-playing .art-doc-footer,
+  .demo-scope.is-demo-playing .art-data-column, .project-card.is-demo-playing .art-data-column { animation: workflow-step .7s cubic-bezier(.2,.75,.25,1) both; }
   .demo-scope.is-demo-playing .art-model:nth-child(3), .project-card.is-demo-playing .art-model:nth-child(3) { animation-delay: 900ms; }
   .demo-scope.is-demo-playing .art-model:nth-child(5), .project-card.is-demo-playing .art-model:nth-child(5) { animation-delay: 1.8s; }
   .demo-scope.is-demo-playing .art-link { animation: workflow-arrow .58s cubic-bezier(.2,.75,.25,1) both; }
@@ -345,9 +365,13 @@ button { color: inherit; }
   .demo-scope.is-demo-playing .art-doc-lines i:nth-child(4) { animation-delay: 800ms; }
   .demo-scope.is-demo-playing .art-scan-beam { animation: workflow-scan-line 2.2s ease-in-out 200ms both; }
   .demo-scope.is-demo-playing .art-doc-footer { animation-delay: 2.3s; }
+  .demo-scope.is-demo-playing .art-data-column:nth-child(2), .project-card.is-demo-playing .art-data-column:nth-child(2) { animation-delay: 220ms; }
+  .demo-scope.is-demo-playing .art-data-column:nth-child(3), .project-card.is-demo-playing .art-data-column:nth-child(3) { animation-delay: 440ms; }
+  .demo-scope.is-demo-playing .art-data-column:nth-child(4), .project-card.is-demo-playing .art-data-column:nth-child(4) { animation-delay: 660ms; }
+  .demo-scope.is-demo-playing .art-data-column:nth-child(5), .project-card.is-demo-playing .art-data-column:nth-child(5) { animation-delay: 880ms; }
 }
 @media (hover: hover) and (prefers-reduced-motion: no-preference) {
-  .art-model, .art-budget-step, .art-task-row, .art-camera, .art-document, .art-progress-panel { transition: transform .24s cubic-bezier(.2,.75,.25,1), box-shadow .24s ease; }
+  .art-model, .art-budget-step, .art-task-row, .art-camera, .art-document, .art-progress-panel, .art-data-dashboard { transition: transform .24s cubic-bezier(.2,.75,.25,1), box-shadow .24s ease; }
   .project-card:hover .art-model:nth-child(1), .project-card:hover .art-model:nth-child(5) { transform: translateY(-2px); }
   .project-card:hover .art-model:nth-child(3) { transform: translateY(-4px); }
   .project-card:hover .art-budget-step:nth-child(odd) { transform: translateY(-2px); }
@@ -356,6 +380,7 @@ button { color: inherit; }
   .project-card:hover .art-camera { transform: translateY(-2px); }
   .project-card:hover .art-document { transform: rotate(1deg) translateY(-2px); }
   .project-card:hover .art-progress-panel { transform: translateY(-2px); box-shadow: 0 9px 25px rgb(25 26 34 / 9%); }
+  .project-card:hover .art-data-dashboard { transform: translateY(-2px); box-shadow: 0 9px 25px rgb(25 26 34 / 7%); }
 }
 @media (hover: none) {
   .project-card .demo-replay { display: inline-flex; }

@@ -98,6 +98,20 @@ window.PORTFOLIO_PROJECTS = [
     repo: "https://github.com/CodeChen-1/CamScanner"
   },
   {
+    name: "Data-Visualisation-Project",
+    title: "Road safety enforcement dashboard",
+    category: "web",
+    kind: "WEB APP · DATA VISUALISATION",
+    state: "2020–2024 dashboard",
+    description: "An interactive dashboard for comparing Australian road-safety enforcement from 2020 to 2024, including speeding fines, roadside drug and alcohol testing, and positive detections.",
+    features: ["State map for comparing enforcement measures", "Trends and age-group views across states and years", "Correlation view with downloadable processed and source data"],
+    stack: ["HTML", "CSS", "JavaScript", "D3.js v7", "TopoJSON Client v3"],
+    testing: "",
+    visual: "data",
+    visualLabel: "An Australian road-safety dashboard compares state-level enforcement data through a map and multi-year charts.",
+    repo: "https://github.com/CodeChen-1/Data-Visualisation-Project"
+  },
+  {
     name: "Smart-Download-Manager",
     title: "Smart Download Manager",
     category: "other",
@@ -111,6 +125,24 @@ window.PORTFOLIO_PROJECTS = [
     visualLabel: "A project in progress; source files and a README are not public yet.",
     isInProgress: true,
     hasSource: false,
+    hasReadme: false,
     repo: "https://github.com/CodeChen-1/Smart-Download-Manager"
+  },
+  {
+    name: "Study-Session-Planner",
+    title: "Study session planner",
+    category: "web",
+    kind: "WEB APP · STUDY WORKFLOW",
+    state: "In progress",
+    description: "An early study tool with a 25-minute focus timer, five-minute breaks, a locally saved focus log, and CSV export. The project is still in progress.",
+    features: ["25-minute focus and five-minute break timer", "Timer state and focus history saved locally", "Manual focus logging with CSV export"],
+    stack: ["HTML", "CSS", "JavaScript"],
+    testing: "The repository includes CSV export tests.",
+    visual: "progress",
+    visualLabel: "A study timer and saved focus log, with public source available while the project is in progress.",
+    isInProgress: true,
+    hasSource: true,
+    hasReadme: false,
+    repo: "https://github.com/CodeChen-1/Study-Session-Planner"
   }
 ];
