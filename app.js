@@ -2,7 +2,11 @@
   "use strict";
 
   const projects = Array.isArray(window.PORTFOLIO_PROJECTS) ? window.PORTFOLIO_PROJECTS : [];
-  const showcaseProjects = projects.filter(project => !project.isInProgress);
+  const showcaseProjects = projects
+    .filter(project => !project.isInProgress)
+    .sort((first, second) => first.rank - second.rank);
+  const inProgressProjects = projects.filter(project => project.isInProgress);
+  const orderedProjects = [...showcaseProjects, ...inProgressProjects];
   const grid = document.querySelector("#project-grid");
   const progressSection = document.querySelector("#in-progress");
   const progressGrid = document.querySelector("#in-progress-grid");
@@ -12,23 +16,11 @@
   const sectionLinks = Array.from(document.querySelectorAll("[data-section-link]"));
   const sectionRail = document.querySelector(".section-rail");
   const main = document.querySelector("#main");
-  const spotlight = document.querySelector(".spotlight");
-  const spotlightView = document.querySelector("#spotlight-view");
-  const spotlightStage = document.querySelector("#spotlight-stage");
-  const spotlightPosition = document.querySelector("#spotlight-position");
-  const spotlightKind = document.querySelector("#spotlight-kind");
-  const spotlightTitle = document.querySelector("#spotlight-title");
-  const spotlightDescription = document.querySelector("#spotlight-description");
-  const spotlightStack = document.querySelector("#spotlight-stack");
-  const spotlightLink = document.querySelector("#spotlight-link");
-  const spotlightPicker = document.querySelector("#spotlight-picker");
-  const spotlightKey = "codechen-portfolio-last-featured";
+  const featuredList = document.querySelector("#featured-projects");
   const prefersMotion = window.matchMedia && window.matchMedia("(prefers-reduced-motion: no-preference)").matches;
   const demoTimers = new WeakMap();
   let revealObserver = null;
   let sectionRailFrame = 0;
-  let selectedSpotlightIndex = -1;
-  let spotlightRequest = 0;
   let activeCategory = "all";
   let searchTerm = "";
 
@@ -277,116 +269,40 @@
     return art;
   }
 
-  function saveFeaturedProject(project) {
-    try {
-      window.localStorage.setItem(spotlightKey, project.name);
-    } catch (_) {
-      // Storage can be disabled in private browsing; the project picker still works.
-    }
-  }
+  function renderFeaturedProjects() {
+    if (!featuredList) return;
+    featuredList.replaceChildren();
 
-  function firstVisitProjectIndex() {
-    if (!showcaseProjects.length) return -1;
-    let previousName = "";
-    try {
-      previousName = window.localStorage.getItem(spotlightKey) || "";
-    } catch (_) {
-      // Fall back to a random selection when storage is unavailable.
-    }
-    const choices = showcaseProjects
-      .map((project, index) => ({ project, index }))
-      .filter(entry => showcaseProjects.length < 2 || entry.project.name !== previousName);
-    const random = new Uint32Array(1);
-    let value = Math.random();
-    if (window.crypto && window.crypto.getRandomValues) {
-      window.crypto.getRandomValues(random);
-      value = random[0] / 4294967296;
-    }
-    return choices[Math.floor(value * choices.length)].index;
-  }
+    showcaseProjects.slice(0, 3).forEach(project => {
+      const item = make("li", "ranked-project");
+      const article = make("article", "ranked-entry");
+      const rank = make("span", "ranked-number", String(project.rank).padStart(2, "0"));
+      rank.setAttribute("aria-hidden", "true");
 
-  function buildSpotlightPicker() {
-    if (!spotlightPicker) return;
-    spotlightPicker.replaceChildren();
-    showcaseProjects.forEach((project, index) => {
-      const button = make("button", "spotlight-pick");
-      button.type = "button";
-      button.dataset.projectIndex = String(index);
-      button.setAttribute("aria-label", "Feature " + project.title);
-      button.setAttribute("aria-pressed", "false");
-      add(button,
-        make("span", "spotlight-pick-number", String(index + 1).padStart(2, "0")),
-        make("span", "spotlight-pick-name", project.title)
+      const details = make("div", "ranked-entry-details");
+      add(details,
+        make("p", "ranked-kind", project.kind),
+        make("h3", "", project.title),
+        make("p", "ranked-proof", project.featuredReason || project.description)
       );
-      button.addEventListener("click", () => {
-        showSpotlight(index, index >= selectedSpotlightIndex ? 1 : -1);
-      });
-      spotlightPicker.appendChild(button);
+
+      const link = make("a", "ranked-entry-link");
+      link.href = project.repo;
+      link.target = "_blank";
+      link.rel = "noreferrer";
+      link.setAttribute("aria-label", "Open " + project.title + " repository on GitHub");
+      add(link, make("span", "", "Open"), make("span", "ranked-entry-arrow", "↗"));
+      link.querySelector(".ranked-entry-arrow").setAttribute("aria-hidden", "true");
+
+      const meta = make("div", "ranked-entry-meta");
+      const score = make("span", "ranked-score", project.score.toFixed(1) + " / 10");
+      score.setAttribute("aria-label", "Portfolio rating: " + project.score.toFixed(1) + " out of 10");
+      add(meta, score, link);
+
+      add(article, rank, details, meta);
+      item.appendChild(article);
+      featuredList.appendChild(item);
     });
-  }
-
-  function updateSpotlight(projectIndex) {
-    const project = showcaseProjects[projectIndex];
-    if (!project || !spotlight) return;
-    selectedSpotlightIndex = projectIndex;
-    spotlight.dataset.projectTitle = project.title;
-    spotlightPosition.textContent = String(projectIndex + 1).padStart(2, "0") + " / " + String(showcaseProjects.length).padStart(2, "0");
-    spotlightKind.textContent = project.kind;
-    spotlightTitle.textContent = project.title;
-    spotlightDescription.textContent = project.description;
-    spotlightLink.href = project.repo;
-    spotlightLink.setAttribute("aria-label", "Open " + project.name + " on GitHub");
-    spotlightStack.replaceChildren();
-    project.stack.forEach(label => spotlightStack.appendChild(make("span", "stack-tag", label)));
-    spotlightStage.replaceChildren(makeVisual(project));
-    const replay = spotlightStage.querySelector(".demo-replay");
-    if (replay) replay.addEventListener("click", () => playDemo(spotlight));
-    spotlightPicker.querySelectorAll(".spotlight-pick").forEach(button => {
-      const selected = Number(button.dataset.projectIndex) === projectIndex;
-      button.setAttribute("aria-pressed", String(selected));
-      if (selected) button.setAttribute("aria-current", "true");
-      else button.removeAttribute("aria-current");
-    });
-    saveFeaturedProject(project);
-  }
-
-  function showSpotlight(projectIndex, direction, initial = false) {
-    if (!showcaseProjects.length) return;
-    const nextIndex = (projectIndex + showcaseProjects.length) % showcaseProjects.length;
-    if (nextIndex === selectedSpotlightIndex && !initial) return;
-    const request = ++spotlightRequest;
-    selectedSpotlightIndex = nextIndex;
-    if (spotlight) stopDemo(spotlight);
-    if (initial || !prefersMotion) {
-      updateSpotlight(nextIndex);
-      return;
-    }
-
-    spotlightView.dataset.direction = direction >= 0 ? "next" : "previous";
-    if (typeof spotlightView.startViewTransition === "function") {
-      const transition = spotlightView.startViewTransition(() => {
-        if (request === spotlightRequest) updateSpotlight(nextIndex);
-      });
-      transition.ready.catch(() => {});
-      transition.updateCallbackDone
-        .then(() => {
-          if (request === spotlightRequest) playDemo(spotlight);
-        })
-        .catch(() => {});
-      return;
-    } else {
-      updateSpotlight(nextIndex);
-      if (typeof Element.prototype.animate === "function") {
-        const offset = direction >= 0 ? "18px" : "-18px";
-        [spotlightView.querySelector(".spotlight-copy"), spotlightStage].forEach((element, index) => {
-          element.animate([
-            { opacity: 0, transform: "translateX(" + offset + ")" },
-            { opacity: 1, transform: "translateX(0)" }
-          ], { duration: index === 0 ? 390 : 500, easing: "cubic-bezier(.2,.75,.25,1)" });
-        });
-      }
-    }
-    playDemo(spotlight);
   }
 
   function playCardDemo(card, project) {
@@ -395,7 +311,7 @@
     if (replay) replay.addEventListener("click", () => playDemo(card));
   }
 
-  function makeCard(project, index, revealOrder = 0) {
+  function makeCard(project, revealOrder = 0) {
     const article = make("article", "project-card" + (project.isInProgress ? " is-in-progress" : ""));
     if (revealObserver) {
       article.dataset.reveal = "card";
@@ -407,8 +323,12 @@
     const art = makeVisual(project);
     const content = make("div", "project-content");
     const topline = make("div", "project-topline");
+    const projectOrder = project.rank ? String(project.rank).padStart(2, "0") : "WIP";
+    const rating = project.score ? make("span", "project-score", project.score.toFixed(1) + " / 10") : null;
+    if (rating) rating.setAttribute("aria-label", "Portfolio rating: " + project.score.toFixed(1) + " out of 10");
     add(topline,
-      make("span", "project-number", String(index + 1).padStart(2, "0") + " / " + project.kind),
+      make("span", "project-number", projectOrder + " / " + project.kind),
+      rating,
       make("span", "project-state", project.state)
     );
     const title = make("h3", "", project.title);
@@ -441,7 +361,7 @@
   }
 
   function matchingProjects() {
-    return projects.filter(project => {
+    return orderedProjects.filter(project => {
       const categoryMatches = activeCategory === "all" || project.category === activeCategory;
       const haystack = [project.name, project.title, project.kind, project.state, project.description]
         .concat(project.features, project.stack).join(" ").toLowerCase();
@@ -476,20 +396,16 @@
       grid.appendChild(empty);
     } else {
       showcaseMatches.forEach((project, matchIndex) => {
-        grid.appendChild(makeCard(project, projects.indexOf(project), matchIndex));
+        grid.appendChild(makeCard(project, matchIndex));
       });
     }
     progressMatches.forEach((project, matchIndex) => {
-      progressGrid.appendChild(makeCard(project, projects.indexOf(project), matchIndex));
+      progressGrid.appendChild(makeCard(project, matchIndex));
     });
     count.textContent = searchTerm || activeCategory !== "all"
-      ? "Showing " + matches.length + " of " + projects.length + " repositories"
-      : projects.length + " repositories · " + showcaseMatches.length + " public · " + progressMatches.length + " in progress";
+      ? "Showing " + matches.length + " of " + orderedProjects.length + " repositories"
+      : orderedProjects.length + " repositories · " + showcaseMatches.length + " public · " + progressMatches.length + " in progress";
     observeReveals();
-  }
-
-  function selectFeatured(index, direction) {
-    showSpotlight(index, direction);
   }
 
   sectionLinks.forEach(link => link.addEventListener("click", () => setActiveSection(link.hash.slice(1))));
@@ -504,25 +420,7 @@
     });
   }, { passive: true });
 
-  buildSpotlightPicker();
-  const initialSpotlightIndex = firstVisitProjectIndex();
-  if (initialSpotlightIndex >= 0) {
-    updateSpotlight(initialSpotlightIndex);
-    playDemo(spotlight);
-  }
-  document.querySelector("#spotlight-prev").addEventListener("click", () => {
-    selectFeatured(selectedSpotlightIndex - 1, -1);
-  });
-  document.querySelector("#spotlight-next").addEventListener("click", () => {
-    selectFeatured(selectedSpotlightIndex + 1, 1);
-  });
-  spotlight.addEventListener("keydown", event => {
-    if (event.target === spotlight || event.target === spotlightView) return;
-    if ((event.key === "ArrowLeft" || event.key === "ArrowRight") && !/^(A|BUTTON|INPUT)$/.test(event.target.tagName)) {
-      event.preventDefault();
-      selectFeatured(selectedSpotlightIndex + (event.key === "ArrowRight" ? 1 : -1), event.key === "ArrowRight" ? 1 : -1);
-    }
-  });
+  renderFeaturedProjects();
 
   filters.forEach(button => {
     button.addEventListener("click", () => {

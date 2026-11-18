@@ -2,6 +2,9 @@ window.PORTFOLIO_PROJECTS = [
   {
     name: "Misinformation-Detection-System",
     title: "Misinformation detection",
+    rank: 1,
+    score: 9.6,
+    featuredReason: "Three model paths for text, URLs, and CSV, with 91 README-reported tests.",
     category: "web",
     kind: "WEB APP · MACHINE LEARNING",
     state: "3-model comparison",
@@ -16,6 +19,9 @@ window.PORTFOLIO_PROJECTS = [
   {
     name: "BudgetMilestoneTracker",
     title: "Budget milestone tracker",
+    rank: 3,
+    score: 8.9,
+    featuredReason: "A native finance workflow with forecasts and 30+ instrumented tests.",
     category: "mobile",
     kind: "ANDROID APP · PERSONAL FINANCE",
     state: "Goals + forecasts",
@@ -30,6 +36,9 @@ window.PORTFOLIO_PROJECTS = [
   {
     name: "Task-Management-System",
     title: "Task management system",
+    rank: 2,
+    score: 9.2,
+    featuredReason: "A daily planning product across web, CLI, calendar, accounts, and tests.",
     category: "web",
     kind: "WEB APP + CLI · PRODUCTIVITY",
     state: "Plan the day",
@@ -44,6 +53,8 @@ window.PORTFOLIO_PROJECTS = [
   {
     name: "Parking-Monitoring-System",
     title: "Parking monitoring system",
+    rank: 5,
+    score: 8.1,
     category: "vision",
     kind: "COMPUTER VISION · PARKING",
     state: "Dual camera",
@@ -58,6 +69,8 @@ window.PORTFOLIO_PROJECTS = [
   {
     name: "RentACar",
     title: "Rent a car",
+    rank: 6,
+    score: 7.8,
     category: "mobile",
     kind: "ANDROID APP · RENTAL SIMULATION",
     state: "Five cars",
@@ -72,6 +85,8 @@ window.PORTFOLIO_PROJECTS = [
   {
     name: "GymnasticsApp",
     title: "Gymnastics scoring app",
+    rank: 7,
+    score: 7.2,
     category: "mobile",
     kind: "ANDROID APP · SCORING",
     state: "10-element routine",
@@ -86,6 +101,8 @@ window.PORTFOLIO_PROJECTS = [
   {
     name: "CamScanner",
     title: "IP webcam document scanner",
+    rank: 8,
+    score: 6.6,
     category: "vision",
     kind: "COMPUTER VISION · DOCUMENTS",
     state: "Save as PDF",
@@ -100,6 +117,8 @@ window.PORTFOLIO_PROJECTS = [
   {
     name: "Data-Visualisation-Project",
     title: "Road safety enforcement dashboard",
+    rank: 4,
+    score: 8.3,
     category: "web",
     kind: "WEB APP · DATA VISUALISATION",
     state: "2020–2024 dashboard",
