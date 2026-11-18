@@ -369,6 +369,18 @@
     });
   }
 
+  function updateFilterCounts() {
+    filters.forEach(button => {
+      const countBadge = button.querySelector("[data-filter-count]");
+      if (!countBadge) return;
+      const category = button.dataset.filter;
+      const total = category === "all"
+        ? orderedProjects.length
+        : orderedProjects.filter(project => project.category === category).length;
+      countBadge.textContent = String(total);
+    });
+  }
+
   function clearGrid(container) {
     if (revealObserver) {
       container.querySelectorAll("[data-reveal-observed]").forEach(node => revealObserver.unobserve(node));
@@ -392,7 +404,14 @@
       grid.appendChild(empty);
     } else if (!showcaseMatches.length) {
       const empty = make("div", "no-results");
-      add(empty, make("strong", "", "No showcase projects match."), make("span", "", "The matching repository appears in the In progress section below."));
+      const matchingCount = progressMatches.length;
+      const title = matchingCount === 1 ? "Your match is in progress." : "Your matches are in progress.";
+      const message = matchingCount === 1
+        ? "The matching repository is listed in the In progress section."
+        : "The matching repositories are listed in the In progress section.";
+      const jumpLink = make("a", "in-progress-result-link", "Jump to in-progress projects ↓");
+      jumpLink.href = "#in-progress";
+      add(empty, make("strong", "", title), make("span", "", message), jumpLink);
       grid.appendChild(empty);
     } else {
       showcaseMatches.forEach((project, matchIndex) => {
@@ -403,8 +422,8 @@
       progressGrid.appendChild(makeCard(project, matchIndex));
     });
     count.textContent = searchTerm || activeCategory !== "all"
-      ? "Showing " + matches.length + " of " + orderedProjects.length + " repositories"
-      : orderedProjects.length + " repositories · " + showcaseMatches.length + " public · " + progressMatches.length + " in progress";
+      ? "Showing " + matches.length + " of " + orderedProjects.length + " repositories · " + showcaseMatches.length + " completed · " + progressMatches.length + " in progress"
+      : orderedProjects.length + " repositories · " + showcaseMatches.length + " completed · " + progressMatches.length + " in progress";
     observeReveals();
   }
 
@@ -420,6 +439,7 @@
     });
   }, { passive: true });
 
+  updateFilterCounts();
   renderFeaturedProjects();
 
   filters.forEach(button => {

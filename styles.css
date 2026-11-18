@@ -120,7 +120,7 @@ button { color: inherit; }
 .project-controls { margin-top: 30px; display: flex; align-items: center; justify-content: space-between; gap: 18px; }
 .filter-list { display: flex; flex-wrap: wrap; gap: 4px; }
 .filter-button { min-height: 38px; padding: 0 12px; display: inline-flex; align-items: center; gap: 7px; border: 1px solid transparent; color: #646570; background: transparent; cursor: pointer; font-size: 11px; }
-.filter-button span { color: var(--blue); font: 8px/1 var(--font-mono); }
+.filter-button span { color: var(--blue); font: 9px/1 var(--font-mono); }
 .filter-button:hover { color: var(--ink); }
 .filter-button.is-active { color: var(--ink); border-color: var(--line); background: var(--surface); }
 .search-box { width: min(100%, 270px); min-height: 39px; padding: 0 10px; display: flex; align-items: center; gap: 9px; border: 1px solid var(--line); background: var(--surface); }
@@ -130,7 +130,7 @@ button { color: inherit; }
 .search-box kbd { min-width: 18px; padding: 2px 4px; border: 1px solid var(--line); color: #7a7b85; font: 9px/1.2 var(--font-mono); text-align: center; }
 .search-icon { position: relative; width: 13px; height: 13px; flex: 0 0 auto; border: 1.4px solid #737481; border-radius: 50%; }
 .search-icon::after { content: ""; position: absolute; right: -4px; bottom: -2px; width: 5px; height: 1.4px; background: #737481; transform: rotate(48deg); }
-.result-count { min-height: 37px; padding-top: 16px; color: var(--muted); font: 9px/1.5 var(--font-mono); letter-spacing: .04em; }
+.result-count { min-height: 40px; margin-top: 12px; padding: 9px 12px; display: flex; align-items: center; border: 1px solid var(--line); color: var(--muted); background: var(--surface); font: 10px/1.5 var(--font-mono); letter-spacing: .025em; }
 .project-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; }
 .project-card { min-width: 0; display: grid; grid-template-rows: 195px 1fr; border: 1px solid var(--line); background: var(--surface); transition: border-color .2s ease, box-shadow .2s ease; }
 .project-card:hover, .project-card:focus-within { border-color: #9295c3; box-shadow: 0 13px 35px rgb(25 26 34 / 8%); }
@@ -235,6 +235,8 @@ button { color: inherit; }
 .no-results { grid-column: 1 / -1; min-height: 170px; padding: 28px; display: grid; align-content: center; gap: 8px; border: 1px dashed var(--line); color: var(--muted); }
 .no-results strong { color: var(--ink); font: 22px/1.2 var(--font-display); }
 .no-results span { font-size: 12px; }
+.in-progress-result-link { width: max-content; display: inline-flex; align-items: center; gap: 7px; color: var(--blue-deep); font-size: 11px; font-weight: 650; text-decoration: none; }
+.in-progress-result-link:hover { text-decoration: underline; }
 .source-note { margin: 20px 0 0; color: #777984; font: 9px/1.5 var(--font-mono); }
 
 .progress-section { padding-block: 0 clamp(77px, 8vw, 108px); }

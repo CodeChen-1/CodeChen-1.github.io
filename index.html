@@ -11,7 +11,7 @@
   <meta property="og:image" content="https://github.com/CodeChen-1.png">
   <title>CodeChen-1 — Software portfolio</title>
   <link rel="icon" href="favicon.svg" type="image/svg+xml">
-  <link rel="stylesheet" href="styles.css?v=20261119-1">
+  <link rel="stylesheet" href="styles.css?v=20261119-2">
 </head>
 <body>
   <a class="skip-link" href="#main">Skip to content</a>
@@ -82,11 +82,11 @@
 
       <div class="project-controls" data-reveal="late">
         <div class="filter-list" role="group" aria-label="Filter projects by area">
-          <button class="filter-button is-active" type="button" data-filter="all" aria-pressed="true">All work <span>10</span></button>
-          <button class="filter-button" type="button" data-filter="mobile" aria-pressed="false">Mobile</button>
-          <button class="filter-button" type="button" data-filter="web" aria-pressed="false">Web</button>
-          <button class="filter-button" type="button" data-filter="vision" aria-pressed="false">Computer vision</button>
-          <button class="filter-button" type="button" data-filter="other" aria-pressed="false">Other</button>
+          <button class="filter-button is-active" type="button" data-filter="all" aria-pressed="true">All work <span data-filter-count="all">10</span></button>
+          <button class="filter-button" type="button" data-filter="mobile" aria-pressed="false">Mobile <span data-filter-count="mobile">3</span></button>
+          <button class="filter-button" type="button" data-filter="web" aria-pressed="false">Web <span data-filter-count="web">4</span></button>
+          <button class="filter-button" type="button" data-filter="vision" aria-pressed="false">Computer vision <span data-filter-count="vision">2</span></button>
+          <button class="filter-button" type="button" data-filter="other" aria-pressed="false">Other <span data-filter-count="other">1</span></button>
         </div>
         <label class="search-box">
           <span class="sr-only">Search projects</span>
@@ -142,6 +142,6 @@
   </footer>
 
   <script src="projects.js?v=20261118-2"></script>
-  <script src="app.js?v=20261118-2"></script>
+  <script src="app.js?v=20261119-2"></script>
 </body>
 </html>
