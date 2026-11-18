@@ -65,8 +65,6 @@ button { color: inherit; }
 .site-nav .nav-github span { padding-left: 3px; color: var(--blue); }
 
 .hero { position: relative; overflow: hidden; color: var(--white); background: var(--hero); }
-.hero::before { content: ""; position: absolute; top: 0; bottom: 0; left: max(calc((100vw - var(--wrap)) / 2), var(--gutter)); width: 1px; background: var(--hero-line); }
-.hero::after { content: ""; position: absolute; top: 0; bottom: 0; right: max(calc((100vw - var(--wrap)) / 2), var(--gutter)); width: 1px; background: var(--hero-line); }
 .hero-inner { position: relative; z-index: 1; padding-block: clamp(48px, 6vw, 82px) 38px; display: grid; grid-template-columns: minmax(0, .84fr) minmax(0, 1.16fr); align-items: center; gap: clamp(38px, 5.5vw, 84px); }
 .eyebrow { display: flex; align-items: center; gap: 9px; margin: 0; color: var(--muted); font: 500 9px/1.5 var(--font-mono); letter-spacing: .105em; }
 .hero .eyebrow, .about-section .eyebrow { color: #b8b9c5; }
