@@ -242,7 +242,7 @@ button { color: inherit; }
 .progress-section { padding-block: 0 clamp(77px, 8vw, 108px); }
 .progress-intro { padding-top: clamp(48px, 6vw, 72px); border-top: 1px solid var(--line); }
 .progress-intro h2 { font-size: clamp(31px, 4vw, 46px); }
-.in-progress-grid { width: min(100%, 760px); margin-top: 25px; display: grid; grid-template-columns: 1fr; }
+.in-progress-grid { width: 100%; margin-top: 25px; display: grid; grid-template-columns: 1fr; gap: 16px; }
 .project-card.is-in-progress { grid-template-columns: minmax(0, .8fr) minmax(0, 1.2fr); grid-template-rows: 1fr; }
 .is-in-progress .project-art { min-height: 230px; border-right: 1px solid #d2d4eb; border-bottom: 0; }
 .is-in-progress .project-content { padding: 22px 24px; }
@@ -381,6 +381,7 @@ button { color: inherit; }
 
 @media (min-width: 1201px) {
   :root { --gutter: clamp(22px, 2vw, 34px); }
+  .in-progress-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 18px; }
   .hero-inner { padding-block: clamp(64px, 6.5vw, 94px) 48px; }
   .hero-copy { max-width: 600px; padding-block: 28px; }
   .hero h1 { margin: 34px 0 30px; font-size: clamp(3.75rem, 3rem + 3vw, 5.625rem); line-height: 1.05; letter-spacing: -.06em; }
