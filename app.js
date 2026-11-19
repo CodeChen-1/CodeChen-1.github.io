@@ -391,20 +391,21 @@
 
   function render() {
     const matches = matchingProjects();
-    const showcaseMatches = matches.filter(project => !project.isInProgress);
+    const projectIndexMatches = matches.filter(project => !project.isInProgress || project.showInProjectIndex);
     const progressMatches = matches.filter(project => project.isInProgress);
+    const separateProgressMatches = matches.filter(project => project.isInProgress && !project.showInProjectIndex);
     clearGrid(grid);
     clearGrid(progressGrid);
-    progressSection.hidden = progressMatches.length === 0;
+    progressSection.hidden = separateProgressMatches.length === 0;
     refreshSectionNavigation();
 
     if (!matches.length) {
       const empty = make("div", "no-results");
       add(empty, make("strong", "", "No matching projects."), make("span", "", "Try another search or choose another project area."));
       grid.appendChild(empty);
-    } else if (!showcaseMatches.length) {
+    } else if (!projectIndexMatches.length) {
       const empty = make("div", "no-results");
-      const matchingCount = progressMatches.length;
+      const matchingCount = separateProgressMatches.length;
       const title = matchingCount === 1 ? "Your match is in progress." : "Your matches are in progress.";
       const message = matchingCount === 1
         ? "The matching repository is listed in the In progress section."
@@ -414,16 +415,16 @@
       add(empty, make("strong", "", title), make("span", "", message), jumpLink);
       grid.appendChild(empty);
     } else {
-      showcaseMatches.forEach((project, matchIndex) => {
+      projectIndexMatches.forEach((project, matchIndex) => {
         grid.appendChild(makeCard(project, matchIndex));
       });
     }
-    progressMatches.forEach((project, matchIndex) => {
+    separateProgressMatches.forEach((project, matchIndex) => {
       progressGrid.appendChild(makeCard(project, matchIndex));
     });
     count.textContent = searchTerm || activeCategory !== "all"
-      ? "Showing " + matches.length + " of " + orderedProjects.length + " repositories · " + showcaseMatches.length + " completed · " + progressMatches.length + " in progress"
-      : orderedProjects.length + " repositories · " + showcaseMatches.length + " completed · " + progressMatches.length + " in progress";
+      ? "Showing " + matches.length + " of " + orderedProjects.length + " repositories · " + (matches.length - progressMatches.length) + " completed · " + progressMatches.length + " in progress"
+      : orderedProjects.length + " repositories · " + showcaseProjects.length + " completed · " + inProgressProjects.length + " in progress";
     observeReveals();
   }
 

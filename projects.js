@@ -160,6 +160,7 @@ window.PORTFOLIO_PROJECTS = [
     visual: "progress",
     visualLabel: "A study timer and saved focus log, with public source available while the project is in progress.",
     isInProgress: true,
+    showInProjectIndex: true,
     hasSource: true,
     hasReadme: false,
     repo: "https://github.com/CodeChen-1/Study-Session-Planner"
