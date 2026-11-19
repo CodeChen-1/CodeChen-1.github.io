@@ -11,7 +11,7 @@
   <meta property="og:image" content="https://github.com/CodeChen-1.png">
   <title>CodeChen-1 — Software portfolio</title>
   <link rel="icon" href="favicon.svg" type="image/svg+xml">
-  <link rel="stylesheet" href="styles.css?v=20261119-5">
+  <link rel="stylesheet" href="styles.css?v=20261119-6">
 </head>
 <body>
   <a class="skip-link" href="#main">Skip to content</a>
@@ -20,7 +20,8 @@
     <a class="section-rail-link is-active" href="#top" data-section-link data-label="Intro" aria-label="Introduction" aria-current="location"><span aria-hidden="true">00</span></a>
     <a class="section-rail-link" href="#work" data-section-link data-label="Work" aria-label="Projects"><span aria-hidden="true">01</span></a>
     <a class="section-rail-link" href="#in-progress" data-section-link data-label="In progress" aria-label="In progress" hidden><span aria-hidden="true">02</span></a>
-    <a class="section-rail-link" href="#about" data-section-link data-label="About" aria-label="About"><span aria-hidden="true">03</span></a>
+    <a class="section-rail-link" href="#skills" data-section-link data-label="Skills" aria-label="Skills"><span aria-hidden="true">03</span></a>
+    <a class="section-rail-link" href="#about" data-section-link data-label="About" aria-label="About"><span aria-hidden="true">04</span></a>
   </nav>
   <header class="site-header">
     <a class="brand" href="#top" aria-label="CodeChen-1 portfolio home">
@@ -29,6 +30,7 @@
     </a>
     <nav class="site-nav" aria-label="Main navigation">
       <a href="#work">Work</a>
+      <a href="#skills">Skills</a>
       <a href="#about">About</a>
       <a class="nav-github" href="https://github.com/CodeChen-1" target="_blank" rel="noreferrer">GitHub <span aria-hidden="true">↗</span></a>
     </nav>
@@ -112,11 +114,130 @@
       <div class="in-progress-grid" id="in-progress-grid"></div>
     </section>
 
+    <section class="skills-section section-wrap" id="skills" aria-labelledby="skills-title">
+      <div class="section-intro skills-intro" data-reveal>
+        <div>
+          <p class="eyebrow"><span class="eyebrow-number">03</span> THE TOOLKIT</p>
+          <h2 id="skills-title">Skills in practice.</h2>
+        </div>
+        <p class="section-summary">Languages, tools, and techniques shown across these repositories. Each is tied to project work, with no self-rated proficiency levels.</p>
+      </div>
+
+      <div class="skills-grid">
+        <article class="skill-card" data-reveal>
+          <header class="skill-card-heading">
+            <div>
+              <p class="skill-kicker">01 / LANGUAGE</p>
+              <h3>Python</h3>
+            </div>
+            <span class="skill-domain">API · DATA · VISION</span>
+          </header>
+          <p class="skill-summary">Services, data workflows, and computer-vision projects.</p>
+          <div class="skill-profile">
+            <section class="skill-block" aria-label="Python techniques">
+              <h4>TECHNIQUES</h4>
+              <ul class="skill-methods">
+                <li>Model comparison and word-level analysis</li>
+                <li>Object detection, OCR, and document edges</li>
+                <li>API-backed workflows and structured storage</li>
+              </ul>
+            </section>
+            <section class="skill-block" aria-label="Python tools">
+              <h4>TOOLS</h4>
+              <div class="skill-tags">
+                <span>FastAPI</span><span>Flask</span><span>scikit-learn</span><span>YOLOv8</span><span>OpenCV</span><span>EasyOCR</span><span>SQLAlchemy</span><span>SQLite</span>
+              </div>
+            </section>
+          </div>
+          <div class="skill-evidence">
+            <h4>PROJECT EVIDENCE</h4>
+            <div class="skill-project-links">
+              <a href="https://github.com/CodeChen-1/Misinformation-Detection-System" target="_blank" rel="noreferrer">Misinformation detection</a>
+              <a href="https://github.com/CodeChen-1/Task-Management-System" target="_blank" rel="noreferrer">Task management</a>
+              <a href="https://github.com/CodeChen-1/Parking-Monitoring-System" target="_blank" rel="noreferrer">Parking monitor</a>
+              <a href="https://github.com/CodeChen-1/CamScanner" target="_blank" rel="noreferrer">CamScanner</a>
+            </div>
+          </div>
+        </article>
+
+        <article class="skill-card" data-reveal>
+          <header class="skill-card-heading">
+            <div>
+              <p class="skill-kicker">02 / LANGUAGE</p>
+              <h3>Kotlin</h3>
+            </div>
+            <span class="skill-domain">ANDROID · MOBILE</span>
+          </header>
+          <p class="skill-summary">Native apps built around tracking, rental, and scoring flows.</p>
+          <div class="skill-profile">
+            <section class="skill-block" aria-label="Kotlin techniques">
+              <h4>TECHNIQUES</h4>
+              <ul class="skill-methods">
+                <li>MVVM structure with local data persistence</li>
+                <li>Budget goals, forecasts, and progress states</li>
+                <li>Rental lifecycle and routine-score tracking</li>
+              </ul>
+            </section>
+            <section class="skill-block" aria-label="Kotlin tools">
+              <h4>TOOLS</h4>
+              <div class="skill-tags">
+                <span>Android</span><span>MVVM</span><span>Room</span><span>Material Components</span><span>Material 3</span>
+              </div>
+            </section>
+          </div>
+          <div class="skill-evidence">
+            <h4>PROJECT EVIDENCE</h4>
+            <div class="skill-project-links">
+              <a href="https://github.com/CodeChen-1/BudgetMilestoneTracker" target="_blank" rel="noreferrer">Budget milestone tracker</a>
+              <a href="https://github.com/CodeChen-1/RentACar" target="_blank" rel="noreferrer">Rent a car</a>
+              <a href="https://github.com/CodeChen-1/GymnasticsApp" target="_blank" rel="noreferrer">Gymnastics scoring app</a>
+            </div>
+          </div>
+        </article>
+
+        <article class="skill-card" data-reveal>
+          <header class="skill-card-heading">
+            <div>
+              <p class="skill-kicker">03 / LANGUAGE</p>
+              <h3>JavaScript<br><span>HTML · CSS</span></h3>
+            </div>
+            <span class="skill-domain">WEB · INTERACTION</span>
+          </header>
+          <p class="skill-summary">Interactive interfaces, dashboards, and browser-based workflows.</p>
+          <div class="skill-profile">
+            <section class="skill-block" aria-label="Web techniques">
+              <h4>TECHNIQUES</h4>
+              <ul class="skill-methods">
+                <li>Interactive maps, charts, and data comparisons</li>
+                <li>Search, filtering, and visible task state</li>
+                <li>Local focus logs and CSV export</li>
+              </ul>
+            </section>
+            <section class="skill-block" aria-label="Web tools">
+              <h4>TOOLS</h4>
+              <div class="skill-tags">
+                <span>React 19</span><span>D3.js v7</span><span>TopoJSON Client v3</span>
+              </div>
+            </section>
+          </div>
+          <div class="skill-evidence">
+            <h4>PROJECT EVIDENCE</h4>
+            <div class="skill-project-links">
+              <a href="https://github.com/CodeChen-1/Data-Visualisation-Project" target="_blank" rel="noreferrer">Road safety dashboard</a>
+              <a href="https://github.com/CodeChen-1/Misinformation-Detection-System" target="_blank" rel="noreferrer">Misinformation detection</a>
+              <a href="https://github.com/CodeChen-1/Task-Management-System" target="_blank" rel="noreferrer">Task management</a>
+              <a href="https://github.com/CodeChen-1/Study-Session-Planner" target="_blank" rel="noreferrer">Study session planner</a>
+            </div>
+          </div>
+        </article>
+      </div>
+    </section>
+
     <section class="about-section" id="about" aria-labelledby="about-title">
       <div class="section-wrap about-inner" data-reveal>
         <div class="about-label">
-          <p class="eyebrow"><span class="eyebrow-number">03</span> THE THREAD</p>
-          <span class="about-mark" aria-hidden="true">03</span>
+          <p class="eyebrow"><span class="eyebrow-number">04</span> THE THREAD</p>
+          <span class="about-mark" aria-hidden="true">04</span>
         </div>
         <div class="about-copy">
           <h2 id="about-title">Turn information<br>into a <em>next step.</em></h2>
