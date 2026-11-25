@@ -11,17 +11,21 @@
   <meta property="og:image" content="https://github.com/CodeChen-1.png">
   <title>CodeChen-1 — Software portfolio</title>
   <link rel="icon" href="favicon.svg" type="image/svg+xml">
-  <link rel="stylesheet" href="styles.css?v=20261119-7">
+  <link rel="stylesheet" href="styles.css?v=20261125-3">
+  <script type="importmap">
+    { "imports": { "three": "https://cdn.jsdelivr.net/npm/three@0.170.0/build/three.module.js" } }
+  </script>
 </head>
 <body>
   <a class="skip-link" href="#main">Skip to content</a>
   <div class="scroll-progress" aria-hidden="true"><span></span></div>
   <nav class="section-rail" aria-label="Page sections">
     <a class="section-rail-link is-active" href="#top" data-section-link data-label="Intro" aria-label="Introduction" aria-current="location"><span aria-hidden="true">00</span></a>
-    <a class="section-rail-link" href="#work" data-section-link data-label="Work" aria-label="Projects"><span aria-hidden="true">01</span></a>
-    <a class="section-rail-link" href="#in-progress" data-section-link data-label="In progress" aria-label="In progress" hidden><span aria-hidden="true">02</span></a>
-    <a class="section-rail-link" href="#skills" data-section-link data-label="Skills" aria-label="Skills"><span aria-hidden="true">03</span></a>
-    <a class="section-rail-link" href="#about" data-section-link data-label="About" aria-label="About"><span aria-hidden="true">04</span></a>
+    <a class="section-rail-link" href="#explore" data-section-link data-label="Explore 3D" aria-label="Explore projects in 3D"><span aria-hidden="true">01</span></a>
+    <a class="section-rail-link" href="#work" data-section-link data-label="Work" aria-label="Projects"><span aria-hidden="true">02</span></a>
+    <a class="section-rail-link" href="#in-progress" data-section-link data-label="In progress" aria-label="In progress" hidden><span aria-hidden="true">03</span></a>
+    <a class="section-rail-link" href="#skills" data-section-link data-label="Skills" aria-label="Skills"><span aria-hidden="true">04</span></a>
+    <a class="section-rail-link" href="#about" data-section-link data-label="About" aria-label="About"><span aria-hidden="true">05</span></a>
   </nav>
   <header class="site-header">
     <a class="brand" href="#top" aria-label="CodeChen-1 portfolio home">
@@ -38,6 +42,7 @@
 
   <main id="main">
     <section class="hero" id="top" aria-labelledby="hero-title">
+      <canvas class="hero-canvas" aria-hidden="true"></canvas>
       <div class="hero-inner section-wrap">
         <div class="hero-copy" data-reveal="hero">
           <p class="eyebrow"><span class="status-dot" aria-hidden="true"></span> CODECHEN-1 <span class="eyebrow-divider">/</span> SOFTWARE FIELD GUIDE</p>
@@ -56,7 +61,7 @@
 
         <section class="ranked-showcase" aria-labelledby="ranked-title">
           <div class="ranked-showcase-heading">
-            <p class="eyebrow"><span class="eyebrow-number">01</span> THE TOP THREE</p>
+            <p class="eyebrow"><span class="eyebrow-number">00</span> THE TOP THREE</p>
             <span class="ranked-showcase-index">RANKED / 08</span>
           </div>
           <div class="ranked-showcase-lead">
@@ -73,10 +78,31 @@
       </div>
     </section>
 
+    <section class="orbit-section section-wrap" id="explore" aria-labelledby="orbit-title">
+      <div class="orbit-copy">
+        <p class="eyebrow"><span class="eyebrow-number">01</span> EXPLORE IN 3D</p>
+        <h2 id="orbit-title">Spin the <em>project map.</em></h2>
+        <p>Each node is a project; lines join projects of the same kind. Drag to rotate, hover to read, click to jump to its card.</p>
+        <div class="orbit-legend" aria-label="Project map legend">
+          <span class="legend-item"><span class="legend-dot" style="--dot-color: #5664ff"></span>Web</span>
+          <span class="legend-item"><span class="legend-dot" style="--dot-color: #38bdf8"></span>Mobile</span>
+          <span class="legend-item"><span class="legend-dot" style="--dot-color: #c084fc"></span>Vision</span>
+          <span class="legend-item"><span class="legend-dot" style="--dot-color: #94a3b8"></span>Other</span>
+          <span class="legend-note">&middot; Node size shows score</span>
+        </div>
+        <ul class="orbit-chips" aria-label="Projects (keyboard alternative to the 3D map)"></ul>
+      </div>
+      <div class="orbit-stage">
+        <canvas class="orbit-canvas" role="img" aria-label="Interactive 3D map of portfolio projects. Use the project list for keyboard access."></canvas>
+        <div class="orbit-label" hidden></div>
+        <button type="button" class="orbit-reset">Reset view</button>
+        <span class="orbit-hint" aria-hidden="true">DRAG TO ROTATE / CLICK A NODE</span>
+      </div>
+    </section>
     <section class="work-section section-wrap" id="work" aria-labelledby="work-title">
       <div class="section-intro" data-reveal>
         <div>
-          <p class="eyebrow"><span class="eyebrow-number">01</span> THE INDEX</p>
+          <p class="eyebrow"><span class="eyebrow-number">02</span> THE INDEX</p>
           <h2 id="work-title">Browse the systems.</h2>
         </div>
         <p class="section-summary">Eight completed projects are rated and ranked by engineering depth, workflow completeness, README-reported verification, and documentation. The index follows that order.</p>
@@ -106,7 +132,7 @@
     <section class="progress-section section-wrap" id="in-progress" aria-labelledby="progress-title" hidden>
       <div class="progress-intro" data-reveal>
         <div>
-          <p class="eyebrow"><span class="eyebrow-number">02</span> CURRENTLY BUILDING</p>
+          <p class="eyebrow"><span class="eyebrow-number">03</span> CURRENTLY BUILDING</p>
           <h2 id="progress-title">In progress.</h2>
         </div>
         <p class="section-summary">Projects in this section are under development. Each card shows the source and documentation currently available in its public repository.</p>
@@ -117,7 +143,7 @@
     <section class="skills-section section-wrap" id="skills" aria-labelledby="skills-title">
       <div class="section-intro skills-intro" data-reveal>
         <div>
-          <p class="eyebrow"><span class="eyebrow-number">03</span> THE TOOLKIT</p>
+          <p class="eyebrow"><span class="eyebrow-number">04</span> THE TOOLKIT</p>
           <h2 id="skills-title">Skills in practice.</h2>
         </div>
         <p class="section-summary">Languages, tools, and techniques shown across these repositories. Each is tied to project work, with no self-rated proficiency levels.</p>
@@ -236,8 +262,8 @@
     <section class="about-section" id="about" aria-labelledby="about-title">
       <div class="section-wrap about-inner" data-reveal>
         <div class="about-label">
-          <p class="eyebrow"><span class="eyebrow-number">04</span> THE THREAD</p>
-          <span class="about-mark" aria-hidden="true">04</span>
+          <p class="eyebrow"><span class="eyebrow-number">05</span> THE THREAD</p>
+          <span class="about-mark" aria-hidden="true">05</span>
         </div>
         <div class="about-copy">
           <h2 id="about-title">Turn information<br>into a <em>next step.</em></h2>
@@ -266,6 +292,8 @@
   </footer>
 
   <script src="projects.js?v=20261119-1"></script>
-  <script src="app.js?v=20261119-3"></script>
+  <script src="app.js?v=20261125-2"></script>
+  <script type="module" src="hero-3d.js?v=20261125-1"></script>
+  <script type="module" src="orbit-3d.js?v=20261125-2"></script>
 </body>
 </html>

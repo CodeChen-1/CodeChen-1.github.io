@@ -19,6 +19,8 @@ This is a static HTML, CSS, and JavaScript site. It can be published from the ro
 - index.html — page structure and metadata
 - styles.css — responsive visual system and project diagrams
 - projects.js — project descriptions and repository links
-- app.js — rendering, category filters, and search
+- app.js — rendering, category filters, search, and card tilt
+- hero-3d.js — procedural Three.js hero backdrop (loaded as an ES module)
+- orbit-3d.js — interactive 3D project constellation map (loaded as an ES module)
 - favicon.svg — compact portfolio mark
 - .nojekyll — tells Pages to serve this as plain static files

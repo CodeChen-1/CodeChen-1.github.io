@@ -18,6 +18,8 @@
   const main = document.querySelector("#main");
   const featuredList = document.querySelector("#featured-projects");
   const prefersMotion = window.matchMedia && window.matchMedia("(prefers-reduced-motion: no-preference)").matches;
+  const tiltQuery = window.matchMedia ? window.matchMedia("(hover: hover) and (pointer: fine)") : null;
+  const canTilt = prefersMotion && Boolean(tiltQuery && tiltQuery.matches);
   const demoTimers = new WeakMap();
   let revealObserver = null;
   let sectionRailFrame = 0;
@@ -311,6 +313,43 @@
     if (replay) replay.addEventListener("click", () => playDemo(card));
   }
 
+  function enableTilt(card) {
+    if (!canTilt) return;
+    const art = card.querySelector(".project-art");
+    if (!art) return;
+    let frame = 0;
+    let tiltX = 0;
+    let tiltY = 0;
+
+    function apply() {
+      frame = 0;
+      art.style.setProperty("--tilt-x", tiltX.toFixed(2) + "deg");
+      art.style.setProperty("--tilt-y", tiltY.toFixed(2) + "deg");
+    }
+
+    card.addEventListener("pointermove", event => {
+      if (event.pointerType !== "mouse") return;
+      const bounds = card.getBoundingClientRect();
+      if (!bounds.width || !bounds.height) return;
+      const x = (event.clientX - bounds.left) / bounds.width - .5;
+      const y = (event.clientY - bounds.top) / bounds.height - .5;
+      tiltX = -y * 5;
+      tiltY = x * 7;
+      card.classList.add("is-tilting");
+      if (!frame) frame = window.requestAnimationFrame(apply);
+    });
+
+    card.addEventListener("pointerleave", () => {
+      if (frame) {
+        window.cancelAnimationFrame(frame);
+        frame = 0;
+      }
+      card.classList.remove("is-tilting");
+      art.style.setProperty("--tilt-x", "0deg");
+      art.style.setProperty("--tilt-y", "0deg");
+    });
+  }
+
   function makeCard(project, revealOrder = 0) {
     const article = make("article", "project-card" + (project.isInProgress ? " is-in-progress" : ""));
     if (revealObserver) {
@@ -357,6 +396,7 @@
     content.appendChild(footer);
     add(article, art, content);
     playCardDemo(article, project);
+    enableTilt(article);
     return article;
   }
 
