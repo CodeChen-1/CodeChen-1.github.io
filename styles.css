@@ -723,7 +723,8 @@ html.show-to-top .to-top { opacity: 1; translate: 0 0; pointer-events: auto; }
   mask: radial-gradient(farthest-side, transparent calc(100% - 3px), #000 calc(100% - 2px));
 }
 
-/* --- orbit stage depth --- */
+/* --- orbit stage depth + 01 -> 02 section divider --- */
+.work-section { border-top: 1px solid var(--line); }
 .orbit-stage { box-shadow: inset 0 0 90px rgb(86 100 255 / 13%); }
 .orbit-stage::after {
   content: ""; position: absolute; inset: 0; z-index: 1; pointer-events: none;
