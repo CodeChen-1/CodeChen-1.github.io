@@ -453,7 +453,7 @@ button { color: inherit; }
   position: sticky; top: 0; z-index: 40;
   width: 100%;
   padding-inline: max(var(--gutter), calc((100% - var(--wrap)) / 2));
-  transition: background-color .32s ease, border-color .32s ease, box-shadow .32s ease;
+  transition: background-color .32s ease, border-color .32s ease, box-shadow .32s ease, transform .28s cubic-bezier(.2,.75,.3,1);
 }
 html.is-scrolled .site-header {
   background: rgb(242 241 236 / 82%);
@@ -461,6 +461,10 @@ html.is-scrolled .site-header {
   backdrop-filter: blur(14px) saturate(1.5);
   border-bottom-color: transparent;
   box-shadow: 0 1px 0 rgb(25 26 34 / 7%), 0 14px 34px rgb(25 26 34 / 10%);
+}
+html.is-scrolled.header-hidden .site-header:not(:focus-within):not(:hover) {
+  transform: translateY(-100%);
+  box-shadow: none;
 }
 
 /* --- hero aurora glows --- */
@@ -802,4 +806,5 @@ html { scroll-padding-top: 96px; }
   .ticker-track, .status-dot, .hero-aurora i, #hero-em,
   .pv-scan-beam, .pv-skel i, .pv-live::before, .pv-elements i.is-now { animation: none !important; }
   #hero-em { background-image: none; color: var(--blue-soft); -webkit-text-fill-color: currentColor; }
+  .site-header { transition: none; }
 }

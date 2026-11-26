@@ -807,16 +807,60 @@
   /* --- scrolled header + back-to-top with progress --- */
   const toTop = document.querySelector(".to-top");
   let scrollFrame = 0;
+  let cursorNearTop = false;
+  let headerHideTimer = 0;
   const onScroll = () => {
     scrollFrame = 0;
     const y = window.scrollY || window.pageYOffset || 0;
-    root.classList.toggle("is-scrolled", y > 14);
+    const scrolled = y > 14;
+    root.classList.toggle("is-scrolled", scrolled);
+    if (!scrolled) {
+      if (headerHideTimer) {
+        window.clearTimeout(headerHideTimer);
+        headerHideTimer = 0;
+      }
+      root.classList.remove("header-hidden");
+    } else if (finePointer && !cursorNearTop) {
+      root.classList.add("header-hidden");
+    }
     if (toTop) {
       root.classList.toggle("show-to-top", y > 620);
       const max = document.documentElement.scrollHeight - window.innerHeight;
       toTop.style.setProperty("--to-top-progress", max > 0 ? String(Math.min(1, y / max)) : "0");
     }
   };
+  if (finePointer) {
+    window.addEventListener("pointermove", event => {
+      if (event.clientY <= 96) {
+        cursorNearTop = true;
+        if (headerHideTimer) {
+          window.clearTimeout(headerHideTimer);
+          headerHideTimer = 0;
+        }
+        root.classList.remove("header-hidden");
+      } else {
+        cursorNearTop = false;
+        if (root.classList.contains("is-scrolled") && !headerHideTimer) {
+          headerHideTimer = window.setTimeout(() => {
+            headerHideTimer = 0;
+            if (!cursorNearTop && root.classList.contains("is-scrolled")) {
+              root.classList.add("header-hidden");
+            }
+          }, 220);
+        }
+      }
+    }, { passive: true });
+    document.documentElement.addEventListener("mouseleave", () => {
+      cursorNearTop = false;
+      if (headerHideTimer) {
+        window.clearTimeout(headerHideTimer);
+        headerHideTimer = 0;
+      }
+      if (root.classList.contains("is-scrolled")) {
+        root.classList.add("header-hidden");
+      }
+    });
+  }
   window.addEventListener("scroll", () => {
     if (!scrollFrame) scrollFrame = window.requestAnimationFrame(onScroll);
   }, { passive: true });
