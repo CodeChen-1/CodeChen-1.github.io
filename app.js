@@ -158,7 +158,7 @@
     if (replay) replay.setAttribute("aria-label", "Playing workflow demo for " + title);
     void scope.offsetWidth;
     scope.classList.add("is-demo-playing");
-    demoTimers.set(scope, window.setTimeout(() => stopDemo(scope), 4800));
+    demoTimers.set(scope, window.setTimeout(() => stopDemo(scope), 5000));
   }
 
   function observeReveals() {
@@ -217,11 +217,13 @@
       [["LR", 82, 1150], ["RF", 91, 1360], ["HYB", 94, 1570]].forEach(item => {
         const meter = pv("div", "pv-meter", undefined, "pop", item[2]);
         const track = pv("div", "pv-meter-track");
-        track.appendChild(pv("i", "", undefined, "fill", item[2] + 90));
+        const fill = pv("i", "", undefined, "fill", item[2] + 90);
+        fill.style.width = item[1] + "%";
+        track.appendChild(fill);
         add(meter, pv("b", "", item[0]), track, pv("span", "", item[1] + "%"));
         meters.appendChild(meter);
       });
-      add(body, input, meters, pv("div", "pv-verdict", "FLAGGED · 94% CONFIDENCE", "stamp-tilt", 2200));
+      add(body, input, meters, pv("div", "pv-verdict", "FLAGGED · 94% CONFIDENCE", "stamp", 2200));
     } else if (project.visual === "budget") {
       const head = pv("div", "pv-fin-head", undefined, "slide", 220);
       add(head, pv("span", "pv-money", "RM 1,240"), pv("span", "pv-trend", "▲ 18% THIS MONTH"));
@@ -247,19 +249,19 @@
       add(focusCard, pv("span", "pv-card-tag", "TODAY · TOP 3"));
       [["Ship portfolio site", true, 950], ["Review pull request", true, 1420], ["Draft project README", false, 1890]].forEach(item => {
         const task = pv("div", "pv-task" + (item[1] ? " is-done" : ""), undefined, item[1] ? "check" : "pop", item[2]);
-        add(task, pv("span", "pv-check"), make("span", "", item[0]));
+        add(task, pv("span", "pv-check", item[1] ? "✓" : ""), make("span", "", item[0]));
         focusCard.appendChild(task);
       });
       const foot = pv("div", "pv-row", undefined, "slide", 2350);
-      add(foot, make("span", "", "2 / 3 DONE"), make("span", "", "NEXT · REVIEW PR"));
+      add(foot, make("span", "", "2 / 3 DONE"), make("span", "", "NEXT · DRAFT README"));
       add(body, inbox, focusCard, foot);
     } else if (project.visual === "parking") {
       const cams = make("div", "pv-cams");
       const camIn = pv("div", "pv-cam", undefined, "pop", 300);
-      add(camIn, pv("b", "", "IN · GATE 1"), pv("span", "pv-car"), pv("span", "", "CAR DETECTED"));
+      add(camIn, pv("b", "", "IN · GATE 1"), pv("span", "pv-cam-car"), pv("span", "", "CAR DETECTED"));
       const ocr = pv("div", "pv-ocr", "YOLOv8\n+ OCR", "pop", 820);
       const camOut = pv("div", "pv-cam", undefined, "pop", 1150);
-      add(camOut, pv("b", "", "OUT · GATE 2"), pv("span", "pv-car"), pv("span", "", "CLEAR"));
+      add(camOut, pv("b", "", "OUT · GATE 2"), pv("span", "pv-cam-car"), pv("span", "", "CLEAR"));
       add(cams, camIn, ocr, camOut);
       const plate = pv("div", "pv-plate", undefined, "slide", 1500);
       add(plate, pv("span", "pv-plate-label", "PLATE READ"));
@@ -520,7 +522,6 @@
     if (project.stack.length) content.appendChild(stack);
     content.appendChild(footer);
     add(article, art, content);
-    article.style.setProperty("--demo-delay", Math.min(revealOrder, 5) * 140 + "ms");
     playCardDemo(article, project);
     enableTilt(article);
     if (demoAutoplay && !project.isInProgress) demoAutoplay.observe(article);
@@ -673,6 +674,7 @@
       const startedAt = performance.now();
       let progress = 0;
       const tick = () => {
+        if (preloader.classList.contains("is-done")) return;
         const elapsed = performance.now() - startedAt;
         const cap = document.readyState === "complete" ? 1 : 0.88;
         progress += (cap - progress) * 0.08;
@@ -696,6 +698,8 @@
   const cursorRing = document.querySelector(".cursor-ring");
   if (cursorDot && cursorRing && finePointer && !reduce) {
     root.classList.add("cursor-on");
+    cursorDot.classList.add("is-hidden");
+    cursorRing.classList.add("is-hidden");
     let x = window.innerWidth / 2;
     let y = window.innerHeight / 2;
     let ringX = x;
@@ -712,7 +716,10 @@
     window.addEventListener("pointermove", event => {
       x = event.clientX;
       y = event.clientY;
-      const interactive = event.target.closest && event.target.closest("a, button, input, .orbit-chip, .project-card, .skill-card");
+      const inField = Boolean(event.target.closest && event.target.closest("input, textarea, select"));
+      cursorDot.classList.toggle("is-hidden", inField);
+      cursorRing.classList.toggle("is-hidden", inField);
+      const interactive = !inField && event.target.closest && event.target.closest("a, button, .orbit-chip, .project-card, .skill-card");
       cursorRing.classList.toggle("is-active", Boolean(interactive));
       if (!raf) raf = window.requestAnimationFrame(loop);
     }, { passive: true });
@@ -736,17 +743,19 @@
       const target = event.target.closest ? event.target.closest(magneticSelector) : null;
       if (target !== magnet) {
         if (magnet) {
-          magnet.style.transition = "translate .45s cubic-bezier(.2,.8,.3,1)";
-          magnet.style.translate = "0 0";
+          magnet.classList.remove("is-magnet");
+          magnet.style.setProperty("--mag-x", "0px");
+          magnet.style.setProperty("--mag-y", "0px");
         }
         magnet = target;
-        if (magnet) magnet.style.transition = "translate .12s ease-out";
+        if (magnet) magnet.classList.add("is-magnet");
       }
       if (magnet) {
         const bounds = magnet.getBoundingClientRect();
         const ratioX = (event.clientX - (bounds.left + bounds.width / 2)) / Math.max(bounds.width, 1);
         const ratioY = (event.clientY - (bounds.top + bounds.height / 2)) / Math.max(bounds.height, 1);
-        magnet.style.translate = (ratioX * 6).toFixed(1) + "px " + (ratioY * 5).toFixed(1) + "px";
+        magnet.style.setProperty("--mag-x", (ratioX * 6).toFixed(1) + "px");
+        magnet.style.setProperty("--mag-y", (ratioY * 5).toFixed(1) + "px");
       }
     }, { passive: true });
   }

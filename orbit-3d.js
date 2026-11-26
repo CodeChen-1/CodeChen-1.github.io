@@ -289,29 +289,33 @@ if (stage && canvas && projects.length) {
         velocity.x += (reduce.matches ? 0 : (hovered >= 0 ? 0 : 0.0025) - velocity.x) * 0.04;
         velocity.y *= 0.92;
       }
-      starGroup.rotation.y -= 0.0006;
-      starGroup.rotation.x = Math.sin(clock * 0.0012) * 0.05;
-      const pulse = 1 + Math.sin(clock * 0.04) * 0.05;
+      if (!reduce.matches) {
+        starGroup.rotation.y -= 0.0006;
+        starGroup.rotation.x = Math.sin(clock * 0.0012) * 0.05;
+      }
+      const pulse = reduce.matches ? 1 : 1 + Math.sin(clock * 0.04) * 0.05;
       nodes.forEach((node, i) => {
         const target = i === hovered ? 1.7 : 1;
         node.scale += (target - node.scale) * 0.18;
-        const breathe = 1 + Math.sin(clock * 0.03 + node.pulsePhase) * 0.05;
+        const breathe = reduce.matches ? 1 : 1 + Math.sin(clock * 0.03 + node.pulsePhase) * 0.05;
         node.mesh.scale.setScalar(node.scale * breathe);
         node.halo.scale.setScalar(node.scale * (i === hovered ? 1.5 : 1) * pulse);
         const glowTarget = i === hovered ? 0.95 : 0.5;
         node.glow.material.opacity += (glowTarget - node.glow.material.opacity) * 0.15;
         node.glow.scale.setScalar(node.glowScale * node.scale * (i === hovered ? 1.5 : 1) * pulse);
       });
-      rings.forEach(ring => {
-        ring.moonPivot.rotation.y += ring.moonSpeed;
-      });
-      pulsingLines.forEach(line => {
-        line.material.opacity = Math.max(0.04, line.base + Math.sin(clock * 0.025 + line.phase) * 0.05);
-      });
-      core.rotation.y -= 0.004;
-      core.rotation.x = Math.sin(clock * 0.002) * 0.12;
-      coreInner.rotation.y += 0.002;
-      coreGlow.material.opacity = 0.6 + Math.sin(clock * 0.035) * 0.12;
+      if (!reduce.matches) {
+        rings.forEach(ring => {
+          ring.moonPivot.rotation.y += ring.moonSpeed;
+        });
+        pulsingLines.forEach(line => {
+          line.material.opacity = Math.max(0.04, line.base + Math.sin(clock * 0.025 + line.phase) * 0.05);
+        });
+        core.rotation.y -= 0.004;
+        core.rotation.x = Math.sin(clock * 0.002) * 0.12;
+        coreInner.rotation.y += 0.002;
+        coreGlow.material.opacity = 0.6 + Math.sin(clock * 0.035) * 0.12;
+      }
       positionLabel();
       renderer.render(scene, camera);
     }
