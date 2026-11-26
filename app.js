@@ -132,8 +132,7 @@
       const available = Boolean(section && !section.hidden);
       link.hidden = !available;
     });
-    updateSectionRailBounds();
-    updateActiveSection();
+    scheduleSectionRailBounds();
   }
 
   function stopDemo(scope) {
@@ -600,7 +599,7 @@
   }
 
   sectionLinks.forEach(link => link.addEventListener("click", () => setActiveSection(link.hash.slice(1))));
-  updateActiveSection();
+  scheduleSectionRailBounds();
   window.addEventListener("scroll", scheduleSectionRailBounds, { passive: true });
   window.addEventListener("resize", () => {
     if (sectionRailFrame) window.cancelAnimationFrame(sectionRailFrame);
@@ -821,7 +820,7 @@
   window.addEventListener("scroll", () => {
     if (!scrollFrame) scrollFrame = window.requestAnimationFrame(onScroll);
   }, { passive: true });
-  onScroll();
+  scrollFrame = window.requestAnimationFrame(onScroll);
   if (toTop) toTop.addEventListener("click", () => {
     window.scrollTo({ top: 0, behavior: reduce ? "auto" : "smooth" });
   });

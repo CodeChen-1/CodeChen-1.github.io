@@ -9,14 +9,6 @@ const projects = Array.isArray(window.PORTFOLIO_PROJECTS) ? window.PORTFOLIO_PRO
 if (stage && canvas && projects.length) {
   const reduce = window.matchMedia("(prefers-reduced-motion: reduce)");
   const COLORS = { web: 0x5664ff, mobile: 0x38bdf8, vision: 0xc084fc, other: 0x94a3b8 };
-  let renderer = null;
-
-  try {
-    renderer = new THREE.WebGLRenderer({ canvas, alpha: true, antialias: true });
-  } catch (error) {
-    stage.classList.add("is-fallback");
-  }
-
   const tone = project => COLORS[project.category] || COLORS.other;
 
   function goToProject(project) {
@@ -42,7 +34,19 @@ if (stage && canvas && projects.length) {
     return button;
   });
 
-  if (renderer) {
+  let initialized = false;
+  function initOrbit() {
+    if (initialized) return;
+    initialized = true;
+    let renderer = null;
+
+    try {
+      renderer = new THREE.WebGLRenderer({ canvas, alpha: true, antialias: true });
+    } catch (error) {
+      stage.classList.add("is-fallback");
+    }
+
+    if (renderer) {
     renderer.setClearAlpha(0);
     const scene = new THREE.Scene();
     const camera = new THREE.PerspectiveCamera(40, 1, 0.1, 100);
@@ -415,5 +419,17 @@ if (stage && canvas && projects.length) {
     });
     reduce.addEventListener("change", () => { if (reduce.matches) stop(); else schedule(); });
     schedule();
+    }
+  }
+
+  if ("IntersectionObserver" in window) {
+    const bootObserver = new IntersectionObserver(entries => {
+      if (!entries[0].isIntersecting) return;
+      bootObserver.disconnect();
+      initOrbit();
+    }, { rootMargin: "300px 0px" });
+    bootObserver.observe(stage);
+  } else {
+    initOrbit();
   }
 }
