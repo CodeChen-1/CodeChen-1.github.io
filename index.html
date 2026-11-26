@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="theme-color" content="#151725">
+  <meta name="theme-color" content="#0f1120">
   <meta name="description" content="A portfolio of Android apps, full-stack web projects, and computer-vision tools by CodeChen-1.">
   <meta property="og:type" content="website">
   <meta property="og:title" content="CodeChen-1 — Software portfolio">
@@ -11,12 +11,22 @@
   <meta property="og:image" content="https://github.com/CodeChen-1.png">
   <title>CodeChen-1 — Software portfolio</title>
   <link rel="icon" href="favicon.svg" type="image/svg+xml">
-  <link rel="stylesheet" href="styles.css?v=20261125-3">
+  <link rel="stylesheet" href="styles.css?v=20261127-3">
   <script type="importmap">
     { "imports": { "three": "https://cdn.jsdelivr.net/npm/three@0.170.0/build/three.module.js" } }
   </script>
 </head>
 <body>
+  <script>document.documentElement.classList.add("js");</script>
+  <div class="preloader" aria-hidden="true">
+    <div class="preloader-inner">
+      <div class="preloader-mark">CC</div>
+      <div class="preloader-bar"><i></i></div>
+      <div class="preloader-count">00%</div>
+    </div>
+  </div>
+  <div class="cursor-dot" aria-hidden="true"></div>
+  <div class="cursor-ring" aria-hidden="true"></div>
   <a class="skip-link" href="#main">Skip to content</a>
   <div class="scroll-progress" aria-hidden="true"><span></span></div>
   <nav class="section-rail" aria-label="Page sections">
@@ -42,20 +52,21 @@
 
   <main id="main">
     <section class="hero" id="top" aria-labelledby="hero-title">
+      <div class="hero-aurora" aria-hidden="true"><i></i><i></i><i></i></div>
       <canvas class="hero-canvas" aria-hidden="true"></canvas>
       <div class="hero-inner section-wrap">
         <div class="hero-copy" data-reveal="hero">
           <p class="eyebrow"><span class="status-dot" aria-hidden="true"></span> CODECHEN-1 <span class="eyebrow-divider">/</span> SOFTWARE FIELD GUIDE</p>
-          <h1 id="hero-title">Make it<br><em>make sense.</em></h1>
+          <h1 id="hero-title">Make it<br><em id="hero-em">make sense.</em></h1>
           <p class="hero-intro">I build practical software that turns incoming information into something people can understand, organize, or act on.</p>
           <div class="hero-actions">
             <a class="button button-dark" href="#work">Enter the project index <span aria-hidden="true">↓</span></a>
             <a class="text-link text-link-light" href="https://github.com/CodeChen-1" target="_blank" rel="noreferrer">GitHub profile <span aria-hidden="true">↗</span></a>
           </div>
           <div class="hero-ledger" aria-label="Portfolio contents">
-            <span><strong>08</strong> PUBLIC PROJECTS</span>
-            <span><strong>02</strong> IN PROGRESS</span>
-            <span><strong>03</strong> AREAS OF WORK</span>
+            <span><strong data-counter="8" data-counter-pad="2">08</strong> PUBLIC PROJECTS</span>
+            <span><strong data-counter="2" data-counter-pad="2">02</strong> IN PROGRESS</span>
+            <span><strong data-counter="3" data-counter-pad="2">03</strong> AREAS OF WORK</span>
           </div>
         </div>
 
@@ -77,6 +88,17 @@
         <span>CAPTURE&nbsp; — &nbsp;INTERPRET&nbsp; — &nbsp;MOVE FORWARD</span>
       </div>
     </section>
+
+    <div class="ticker" aria-hidden="true">
+      <div class="ticker-track">
+        <div class="ticker-run">
+          <span>MISINFORMATION DETECTION</span><i>→</i><span>TASK MANAGEMENT SYSTEM</span><i>→</i><span>BUDGET MILESTONE TRACKER</span><i>→</i><span>ROAD SAFETY DASHBOARD</span><i>→</i><span>PARKING MONITORING</span><i>→</i><span>RENT A CAR</span><i>→</i><span>GYMNASTICS SCORING</span><i>→</i><span>IP WEBCAM SCANNER</span><i>→</i><span>STUDY SESSION PLANNER</span><i>→</i><span>SMART DOWNLOAD MANAGER</span><i>→</i>
+        </div>
+        <div class="ticker-run">
+          <span>MISINFORMATION DETECTION</span><i>→</i><span>TASK MANAGEMENT SYSTEM</span><i>→</i><span>BUDGET MILESTONE TRACKER</span><i>→</i><span>ROAD SAFETY DASHBOARD</span><i>→</i><span>PARKING MONITORING</span><i>→</i><span>RENT A CAR</span><i>→</i><span>GYMNASTICS SCORING</span><i>→</i><span>IP WEBCAM SCANNER</span><i>→</i><span>STUDY SESSION PLANNER</span><i>→</i><span>SMART DOWNLOAD MANAGER</span><i>→</i>
+        </div>
+      </div>
+    </div>
 
     <section class="orbit-section section-wrap" id="explore" aria-labelledby="orbit-title">
       <div class="orbit-copy">
@@ -291,9 +313,12 @@
     <a class="footer-link" href="https://github.com/CodeChen-1" target="_blank" rel="noreferrer">GitHub profile <span aria-hidden="true">↗</span></a>
   </footer>
 
+  <button class="to-top" type="button" aria-label="Back to top">↑</button>
+  <div class="grain" aria-hidden="true"></div>
+
   <script src="projects.js?v=20261119-1"></script>
-  <script src="app.js?v=20261125-2"></script>
-  <script type="module" src="hero-3d.js?v=20261125-1"></script>
-  <script type="module" src="orbit-3d.js?v=20261125-2"></script>
+  <script src="app.js?v=20261127-2"></script>
+  <script type="module" src="hero-3d.js?v=20261127-1"></script>
+  <script type="module" src="orbit-3d.js?v=20261127-2"></script>
 </body>
 </html>

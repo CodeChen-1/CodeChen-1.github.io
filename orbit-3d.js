@@ -48,20 +48,120 @@ if (stage && canvas && projects.length) {
     const camera = new THREE.PerspectiveCamera(40, 1, 0.1, 100);
     camera.position.set(0, 0, 10.5);
 
+    // Soft radial glow texture shared by node glows and the core.
+    function makeGlowTexture() {
+      const size = 64;
+      const glowCanvas = document.createElement("canvas");
+      glowCanvas.width = size;
+      glowCanvas.height = size;
+      const ctx = glowCanvas.getContext("2d");
+      const gradient = ctx.createRadialGradient(size / 2, size / 2, 0, size / 2, size / 2, size / 2);
+      gradient.addColorStop(0, "rgba(255,255,255,1)");
+      gradient.addColorStop(0.3, "rgba(255,255,255,.5)");
+      gradient.addColorStop(1, "rgba(255,255,255,0)");
+      ctx.fillStyle = gradient;
+      ctx.fillRect(0, 0, size, size);
+      return new THREE.CanvasTexture(glowCanvas);
+    }
+    const glowTexture = makeGlowTexture();
+
     const group = new THREE.Group();
     scene.add(group);
 
+    // Starfield shell that slowly counter-rotates around the constellation.
+    const starGroup = new THREE.Group();
+    scene.add(starGroup);
+    const starCount = 260;
+    const starPositions = new Float32Array(starCount * 3);
+    for (let index = 0; index < starCount; index += 1) {
+      const vector = new THREE.Vector3(
+        Math.random() * 2 - 1,
+        Math.random() * 2 - 1,
+        Math.random() * 2 - 1
+      ).normalize().multiplyScalar(6.5 + Math.random() * 3.5);
+      starPositions[index * 3] = vector.x;
+      starPositions[index * 3 + 1] = vector.y;
+      starPositions[index * 3 + 2] = vector.z;
+    }
+    const starGeometry = new THREE.BufferGeometry();
+    starGeometry.setAttribute("position", new THREE.BufferAttribute(starPositions, 3));
+    starGroup.add(new THREE.Points(
+      starGeometry,
+      new THREE.PointsMaterial({
+        color: 0xb9beff,
+        size: 0.055,
+        map: glowTexture,
+        transparent: true,
+        opacity: 0.7,
+        depthWrite: false,
+        blending: THREE.AdditiveBlending,
+        sizeAttenuation: true
+      })
+    ));
+
+    // Core: wireframe shell + dark inner solid + center glow.
     const core = new THREE.Mesh(
       new THREE.IcosahedronGeometry(1.6, 1),
-      new THREE.MeshBasicMaterial({ color: 0x5664ff, wireframe: true, transparent: true, opacity: 0.35 })
+      new THREE.MeshBasicMaterial({ color: 0x5664ff, wireframe: true, transparent: true, opacity: 0.4 })
     );
     group.add(core);
+    const coreInner = new THREE.Mesh(
+      new THREE.IcosahedronGeometry(1.28, 1),
+      new THREE.MeshBasicMaterial({ color: 0x0f1120 })
+    );
+    group.add(coreInner);
+    const coreGlow = new THREE.Sprite(
+      new THREE.SpriteMaterial({
+        map: glowTexture,
+        color: 0x5664ff,
+        transparent: true,
+        opacity: 0.65,
+        depthWrite: false,
+        blending: THREE.AdditiveBlending
+      })
+    );
+    coreGlow.scale.set(4.4, 4.4, 1);
+    group.add(coreGlow);
 
     const shell = new THREE.Mesh(
       new THREE.SphereGeometry(3.2, 24, 16),
       new THREE.MeshBasicMaterial({ color: 0xb9beff, wireframe: true, transparent: true, opacity: 0.06 })
     );
     group.add(shell);
+
+    // Tilted orbital rings with a small moon riding each one.
+    function makeRing(radius, tiltX, tiltZ, moonSpeed) {
+      const ringGroup = new THREE.Group();
+      ringGroup.rotation.x = tiltX;
+      ringGroup.rotation.z = tiltZ;
+      const curvePoints = new THREE.EllipseCurve(0, 0, radius, radius).getPoints(90);
+      const ringLine = new THREE.LineLoop(
+        new THREE.BufferGeometry().setFromPoints(curvePoints.map(point => new THREE.Vector3(point.x, 0, point.y))),
+        new THREE.LineBasicMaterial({ color: 0x5664ff, transparent: true, opacity: 0.2 })
+      );
+      ringGroup.add(ringLine);
+      const moonPivot = new THREE.Group();
+      const moon = new THREE.Mesh(
+        new THREE.SphereGeometry(0.09, 12, 8),
+        new THREE.MeshBasicMaterial({ color: 0xb9beff })
+      );
+      moon.position.x = radius;
+      moonPivot.add(moon);
+      ringGroup.add(moonPivot);
+      group.add(ringGroup);
+      return { ringGroup, moonPivot, moonSpeed };
+    }
+    const rings = [
+      makeRing(3.9, 1.15, 0.35, 0.0055),
+      makeRing(4.6, -1.05, -0.5, -0.0038)
+    ];
+
+    // Line materials pulse gently; track them with their base opacity.
+    const pulsingLines = [];
+    function trackLine(line) {
+      group.add(line);
+      pulsingLines.push({ material: line.material, base: line.material.opacity, phase: Math.random() * Math.PI * 2 });
+    }
 
     // Node radius scaled by score (6.0 - 10.0 -> 0.20 - 0.38); in-progress at 0.16.
     const getNodeRadius = project => {
@@ -91,19 +191,40 @@ if (stage && canvas && projects.length) {
       );
       halo.position.copy(position);
       group.add(halo);
+      const glow = new THREE.Sprite(
+        new THREE.SpriteMaterial({
+          map: glowTexture,
+          color: tone(project),
+          transparent: true,
+          opacity: 0.5,
+          depthWrite: false,
+          blending: THREE.AdditiveBlending
+        })
+      );
+      glow.position.copy(position);
+      glow.scale.setScalar(radius * 6);
+      group.add(glow);
       const spoke = new THREE.Line(
         new THREE.BufferGeometry().setFromPoints([new THREE.Vector3(), position]),
         new THREE.LineBasicMaterial({ color: 0x5664ff, transparent: true, opacity: 0.18 })
       );
-      group.add(spoke);
-      return { project, mesh, halo, spoke, scale: 1 };
+      trackLine(spoke);
+      return {
+        project,
+        mesh,
+        halo,
+        glow,
+        scale: 1,
+        glowScale: radius * 6,
+        pulsePhase: Math.random() * Math.PI * 2
+      };
     });
 
     // Link nodes that share a category.
     projects.forEach((a, i) => {
       projects.forEach((b, j) => {
         if (j <= i || a.category !== b.category) return;
-        group.add(new THREE.Line(
+        trackLine(new THREE.Line(
           new THREE.BufferGeometry().setFromPoints([nodes[i].mesh.position, nodes[j].mesh.position]),
           new THREE.LineBasicMaterial({ color: 0xb9beff, transparent: true, opacity: 0.12 })
         ));
@@ -120,6 +241,7 @@ if (stage && canvas && projects.length) {
     let frameId = 0;
     let visible = true;
     let pageVisible = !document.hidden;
+    let clock = 0;
 
     function resize() {
       const width = stage.clientWidth;
@@ -160,19 +282,40 @@ if (stage && canvas && projects.length) {
     }
 
     function draw() {
+      clock += reduce.matches ? 0 : 1;
       group.rotation.y += velocity.x;
       group.rotation.x = Math.max(-1.1, Math.min(1.1, group.rotation.x + velocity.y));
       if (!dragging) {
         velocity.x += (reduce.matches ? 0 : (hovered >= 0 ? 0 : 0.0025) - velocity.x) * 0.04;
         velocity.y *= 0.92;
       }
+      if (!reduce.matches) {
+        starGroup.rotation.y -= 0.0006;
+        starGroup.rotation.x = Math.sin(clock * 0.0012) * 0.05;
+      }
+      const pulse = reduce.matches ? 1 : 1 + Math.sin(clock * 0.04) * 0.05;
       nodes.forEach((node, i) => {
         const target = i === hovered ? 1.7 : 1;
         node.scale += (target - node.scale) * 0.18;
-        node.mesh.scale.setScalar(node.scale);
-        node.halo.scale.setScalar(node.scale * (i === hovered ? 1.5 : 1));
+        const breathe = reduce.matches ? 1 : 1 + Math.sin(clock * 0.03 + node.pulsePhase) * 0.05;
+        node.mesh.scale.setScalar(node.scale * breathe);
+        node.halo.scale.setScalar(node.scale * (i === hovered ? 1.5 : 1) * pulse);
+        const glowTarget = i === hovered ? 0.95 : 0.5;
+        node.glow.material.opacity += (glowTarget - node.glow.material.opacity) * 0.15;
+        node.glow.scale.setScalar(node.glowScale * node.scale * (i === hovered ? 1.5 : 1) * pulse);
       });
-      core.rotation.y -= 0.004;
+      if (!reduce.matches) {
+        rings.forEach(ring => {
+          ring.moonPivot.rotation.y += ring.moonSpeed;
+        });
+        pulsingLines.forEach(line => {
+          line.material.opacity = Math.max(0.04, line.base + Math.sin(clock * 0.025 + line.phase) * 0.05);
+        });
+        core.rotation.y -= 0.004;
+        core.rotation.x = Math.sin(clock * 0.002) * 0.12;
+        coreInner.rotation.y += 0.002;
+        coreGlow.material.opacity = 0.6 + Math.sin(clock * 0.035) * 0.12;
+      }
       positionLabel();
       renderer.render(scene, camera);
     }
