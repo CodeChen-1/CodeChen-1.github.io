@@ -17,9 +17,26 @@ window.PORTFOLIO_PROJECTS = [
     repo: "https://github.com/CodeChen-1/Misinformation-Detection-System"
   },
   {
+    name: "RoomFlow",
+    title: "RoomFlow",
+    rank: 2,
+    score: 9.4,
+    featuredReason: "Full-stack room booking with conflict checks, calendar views, and admin analytics.",
+    category: "web",
+    kind: "WEB APP · ROOM BOOKING",
+    state: "Live schedule + booking",
+    description: "A full-stack meeting and study room booking platform built with Next.js, TypeScript, and FastAPI. Browse rooms, check time-slot conflicts in real time, and manage recurring bookings and room utilization.",
+    features: ["Interactive room availability and time-slot conflict detection", "Calendar schedule views, booking history, and status filters", "Admin controls for room capacity, equipment, and usage analytics"],
+    stack: ["Next.js", "TypeScript", "FastAPI", "PostgreSQL"],
+    testing: "Type-checked frontend with FastAPI and Alembic schema migrations.",
+    visual: "rooms",
+    visualLabel: "Room cards show live availability, time slots, and confirmed booking state.",
+    repo: "https://github.com/CodeChen-1/RoomFlow"
+  },
+  {
     name: "BudgetMilestoneTracker",
     title: "Budget milestone tracker",
-    rank: 3,
+    rank: 4,
     score: 8.9,
     featuredReason: "A native finance workflow with forecasts and 30+ instrumented tests.",
     category: "mobile",
@@ -36,7 +53,7 @@ window.PORTFOLIO_PROJECTS = [
   {
     name: "Task-Management-System",
     title: "Task management system",
-    rank: 2,
+    rank: 3,
     score: 9.2,
     featuredReason: "A daily planning product across web, CLI, calendar, accounts, and tests.",
     category: "web",
@@ -53,7 +70,7 @@ window.PORTFOLIO_PROJECTS = [
   {
     name: "Parking-Monitoring-System",
     title: "Parking monitoring system",
-    rank: 5,
+    rank: 6,
     score: 8.1,
     category: "vision",
     kind: "COMPUTER VISION · PARKING",
@@ -69,7 +86,7 @@ window.PORTFOLIO_PROJECTS = [
   {
     name: "RentACar",
     title: "Rent a car",
-    rank: 6,
+    rank: 7,
     score: 7.8,
     category: "mobile",
     kind: "ANDROID APP · RENTAL SIMULATION",
@@ -85,7 +102,7 @@ window.PORTFOLIO_PROJECTS = [
   {
     name: "GymnasticsApp",
     title: "Gymnastics scoring app",
-    rank: 7,
+    rank: 8,
     score: 7.2,
     category: "mobile",
     kind: "ANDROID APP · SCORING",
@@ -101,7 +118,7 @@ window.PORTFOLIO_PROJECTS = [
   {
     name: "CamScanner",
     title: "IP webcam document scanner",
-    rank: 8,
+    rank: 9,
     score: 6.6,
     category: "vision",
     kind: "COMPUTER VISION · DOCUMENTS",
@@ -117,7 +134,7 @@ window.PORTFOLIO_PROJECTS = [
   {
     name: "Data-Visualisation-Project",
     title: "Road safety enforcement dashboard",
-    rank: 4,
+    rank: 5,
     score: 8.3,
     category: "web",
     kind: "WEB APP · DATA VISUALISATION",

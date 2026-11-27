@@ -10,6 +10,39 @@ if (stage && canvas && projects.length) {
   const reduce = window.matchMedia("(prefers-reduced-motion: reduce)");
   const COLORS = { web: 0x5664ff, mobile: 0x38bdf8, vision: 0xc084fc, other: 0x94a3b8 };
   const tone = project => COLORS[project.category] || COLORS.other;
+  const filterButtons = Array.from(document.querySelectorAll("[data-orbit-filter]"));
+  const CATEGORY_ORDER = { web: 0, mobile: 1, vision: 2, other: 3 };
+  const countEl = document.querySelector("[data-orbit-count]");
+  let activeFilter = "all";
+  let onFilterChange = null;
+  let chipItems = [];
+
+  function applyFilter(category) {
+    activeFilter = category === activeFilter && category !== "all" ? "all" : category;
+    filterButtons.forEach(button => {
+      const selected = button.dataset.orbitFilter === activeFilter;
+      button.classList.toggle("is-active", selected);
+      button.setAttribute("aria-pressed", String(selected));
+    });
+    let visibleCount = 0;
+    chipItems.forEach(({ li, project }) => {
+      const hide = activeFilter !== "all" && project.category !== activeFilter;
+      li.hidden = hide;
+      if (!hide) visibleCount += 1;
+    });
+    if (countEl) {
+      countEl.textContent = activeFilter === "all"
+        ? projects.length + " PROJECTS"
+        : visibleCount + " OF " + projects.length;
+    }
+    if (onFilterChange) onFilterChange();
+  }
+
+  filterButtons.forEach(button => {
+    button.addEventListener("click", () => {
+      applyFilter(button.dataset.orbitFilter || "all");
+    });
+  });
 
   function goToProject(project) {
     const cards = document.querySelectorAll("[data-project-title]");
@@ -20,19 +53,41 @@ if (stage && canvas && projects.length) {
     window.setTimeout(() => card.classList.remove("is-pinged"), 1800);
   }
 
-  // Accessible/fallback list: one button per project, also drives hover state.
-  const chips = projects.map(project => {
-    const li = document.createElement("li");
-    const button = document.createElement("button");
-    button.type = "button";
-    button.className = "orbit-chip";
-    button.textContent = project.title;
-    button.style.setProperty("--chip", "#" + tone(project).toString(16).padStart(6, "0"));
-    button.addEventListener("click", () => goToProject(project));
-    li.appendChild(button);
-    chipList.appendChild(li);
-    return button;
-  });
+  // Accessible/fallback ledger: grouped by category and score, indexed to match 3D nodes.
+  const chips = new Array(projects.length);
+  chipItems = projects
+    .map((project, index) => ({ project, index }))
+    .sort((a, b) => {
+      const catDiff = (CATEGORY_ORDER[a.project.category] ?? 99) - (CATEGORY_ORDER[b.project.category] ?? 99);
+      if (catDiff !== 0) return catDiff;
+      return (b.project.score || 0) - (a.project.score || 0);
+    })
+    .map(({ project, index }) => {
+      const li = document.createElement("li");
+      const button = document.createElement("button");
+      button.type = "button";
+      button.className = "orbit-chip";
+      button.style.setProperty("--chip", "#" + tone(project).toString(16).padStart(6, "0"));
+
+      const dot = document.createElement("span");
+      dot.className = "orbit-row-dot";
+      dot.setAttribute("aria-hidden", "true");
+
+      const title = document.createElement("span");
+      title.className = "orbit-row-title";
+      title.textContent = project.title;
+
+      const meta = document.createElement("span");
+      meta.className = "orbit-row-meta";
+      meta.textContent = project.isInProgress ? "WIP" : (typeof project.score === "number" ? project.score.toFixed(1) : "");
+
+      button.append(dot, title, meta);
+      button.addEventListener("click", () => goToProject(project));
+      li.appendChild(button);
+      chipList.appendChild(li);
+      chips[index] = button;
+      return { li, project };
+    });
 
   let initialized = false;
   function initOrbit() {
@@ -160,11 +215,16 @@ if (stage && canvas && projects.length) {
       makeRing(4.6, -1.05, -0.5, -0.0038)
     ];
 
-    // Line materials pulse gently; track them with their base opacity.
+    // Line materials pulse gently; track them with their base opacity and category.
     const pulsingLines = [];
-    function trackLine(line) {
+    function trackLine(line, category) {
       group.add(line);
-      pulsingLines.push({ material: line.material, base: line.material.opacity, phase: Math.random() * Math.PI * 2 });
+      pulsingLines.push({
+        material: line.material,
+        base: line.material.opacity,
+        phase: Math.random() * Math.PI * 2,
+        category
+      });
     }
 
     // Node radius scaled by score (6.0 - 10.0 -> 0.20 - 0.38); in-progress at 0.16.
@@ -212,12 +272,13 @@ if (stage && canvas && projects.length) {
         new THREE.BufferGeometry().setFromPoints([new THREE.Vector3(), position]),
         new THREE.LineBasicMaterial({ color: 0x5664ff, transparent: true, opacity: 0.18 })
       );
-      trackLine(spoke);
+      trackLine(spoke, project.category);
       return {
         project,
         mesh,
         halo,
         glow,
+        baseOpacity: project.isInProgress ? 0.6 : 1,
         scale: 1,
         glowScale: radius * 6,
         pulsePhase: Math.random() * Math.PI * 2
@@ -231,7 +292,7 @@ if (stage && canvas && projects.length) {
         trackLine(new THREE.Line(
           new THREE.BufferGeometry().setFromPoints([nodes[i].mesh.position, nodes[j].mesh.position]),
           new THREE.LineBasicMaterial({ color: 0xb9beff, transparent: true, opacity: 0.12 })
-        ));
+        ), a.category);
       });
     });
 
@@ -275,9 +336,19 @@ if (stage && canvas && projects.length) {
 
     function pick() {
       raycaster.setFromCamera(pointer, camera);
-      const hit = raycaster.intersectObjects(nodes.map(node => node.mesh), false)[0];
+      const targets = activeFilter === "all"
+        ? nodes.map(node => node.mesh)
+        : nodes.filter(node => node.project.category === activeFilter).map(node => node.mesh);
+      const hit = raycaster.intersectObjects(targets, false)[0];
       return hit ? hit.object.userData.index : -1;
     }
+
+    onFilterChange = () => {
+      if (hovered >= 0 && activeFilter !== "all" && nodes[hovered].project.category !== activeFilter) {
+        setHover(-1);
+      }
+      if (reduce.matches) draw();
+    };
 
     function positionLabel() {
       if (hovered < 0) return;
@@ -298,22 +369,29 @@ if (stage && canvas && projects.length) {
         starGroup.rotation.x = Math.sin(clock * 0.0012) * 0.05;
       }
       const pulse = reduce.matches ? 1 : 1 + Math.sin(clock * 0.04) * 0.05;
+      const filtered = activeFilter !== "all";
       nodes.forEach((node, i) => {
-        const target = i === hovered ? 1.7 : 1;
+        const matches = !filtered || node.project.category === activeFilter;
+        const target = i === hovered ? 1.7 : (filtered && matches ? 1.18 : 1);
         node.scale += (target - node.scale) * 0.18;
         const breathe = reduce.matches ? 1 : 1 + Math.sin(clock * 0.03 + node.pulsePhase) * 0.05;
         node.mesh.scale.setScalar(node.scale * breathe);
+        node.mesh.material.opacity += ((matches ? node.baseOpacity : 0.14) - node.mesh.material.opacity) * 0.15;
         node.halo.scale.setScalar(node.scale * (i === hovered ? 1.5 : 1) * pulse);
-        const glowTarget = i === hovered ? 0.95 : 0.5;
+        node.halo.material.opacity += ((matches ? (filtered ? 0.22 : 0.14) : 0.02) - node.halo.material.opacity) * 0.15;
+        const glowTarget = i === hovered ? 0.95 : (matches ? (filtered ? 0.72 : 0.5) : 0.06);
         node.glow.material.opacity += (glowTarget - node.glow.material.opacity) * 0.15;
         node.glow.scale.setScalar(node.glowScale * node.scale * (i === hovered ? 1.5 : 1) * pulse);
+      });
+      pulsingLines.forEach(line => {
+        const matches = !filtered || line.category === activeFilter;
+        const wave = reduce.matches ? 0 : Math.sin(clock * 0.025 + line.phase) * 0.05;
+        const targetOpacity = matches ? Math.max(0.04, (filtered ? line.base * 1.9 : line.base) + wave) : 0.02;
+        line.material.opacity += (targetOpacity - line.material.opacity) * 0.15;
       });
       if (!reduce.matches) {
         rings.forEach(ring => {
           ring.moonPivot.rotation.y += ring.moonSpeed;
-        });
-        pulsingLines.forEach(line => {
-          line.material.opacity = Math.max(0.04, line.base + Math.sin(clock * 0.025 + line.phase) * 0.05);
         });
         core.rotation.y -= 0.004;
         core.rotation.x = Math.sin(clock * 0.002) * 0.12;

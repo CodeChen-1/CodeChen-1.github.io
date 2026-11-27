@@ -106,15 +106,15 @@
   function updateSectionRailBounds() {
     if (!sectionRail || !main) return;
     const mainBounds = main.getBoundingClientRect();
-    const inset = window.innerHeight * .05;
-    const bottomLimit = window.innerHeight - inset;
-    const top = Math.max(inset, Math.min(mainBounds.top, bottomLimit));
+    const topInset = Math.max(96, window.innerHeight * .11);
+    const bottomLimit = window.innerHeight - Math.max(28, window.innerHeight * .05);
+    const top = Math.max(topInset, Math.min(mainBounds.top, bottomLimit));
     const bottom = Math.min(bottomLimit, mainBounds.bottom);
     const height = Math.max(0, bottom - top);
     const visibleLinkCount = sectionLinks.filter(link => !link.hidden).length;
     sectionRail.style.setProperty("--section-rail-top", Math.round(top) + "px");
     sectionRail.style.setProperty("--section-rail-height", Math.floor(height) + "px");
-    sectionRail.classList.toggle("is-within-main", height >= visibleLinkCount * 36);
+    sectionRail.classList.toggle("is-within-main", height >= visibleLinkCount * 30);
   }
 
   function scheduleSectionRailBounds() {
@@ -379,10 +379,23 @@
         body.appendChild(statusRow);
       });
       body.appendChild(pv("div", "pv-chip pv-chip-good", "SHIPPING SOON", "stamp", 1200));
+    } else if (project.visual === "rooms") {
+      const rooms = make("div", "pv-rooms");
+      [["LAB 302 · 8 SEATS", "FREE", "pv-chip-good", 280], ["STUDIO B · 4 SEATS", "BOOKED", "", 480]].forEach(item => {
+        const row = pv("div", "pv-room", undefined, "slide", item[3]);
+        add(row, make("span", "", item[0]), make("b", "pv-chip " + item[2], item[1]));
+        rooms.appendChild(row);
+      });
+      const slots = make("div", "pv-slots");
+      [["09:00", ""], ["10:30", "is-booked"], ["13:00", ""], ["15:00", "is-free"]].forEach((slot, index) => {
+        slots.appendChild(pv("span", "pv-slot " + slot[1], slot[0], "pop", 720 + index * 140));
+      });
+      add(body, rooms, slots, pv("div", "pv-chip pv-chip-good", "NO CONFLICT · CONFIRMED", "stamp", 1400));
     }
 
     const windowTitles = {
       models: "MODEL COMPARISON",
+      rooms: "ROOM BOOKING · LIVE",
       budget: "SAVINGS · GOALS",
       tasks: "PLAN THE DAY",
       parking: "PARKING GATE",
@@ -707,8 +720,7 @@
     const loop = () => {
       ringX += (x - ringX) * 0.16;
       ringY += (y - ringY) * 0.16;
-      cursorRing.style.transform = "translate3d(" + (ringX - 17) + "px," + (ringY - 17) + "px,0)";
-      cursorDot.style.transform = "translate3d(" + (x - 3) + "px," + (y - 3) + "px,0)";
+      cursorRing.style.transform = "translate3d(" + (ringX - 14) + "px," + (ringY - 14) + "px,0)";
       if (Math.abs(x - ringX) > 0.3 || Math.abs(y - ringY) > 0.3) raf = window.requestAnimationFrame(loop);
       else raf = 0;
     };
@@ -716,8 +728,9 @@
       x = event.clientX;
       y = event.clientY;
       const inField = Boolean(event.target.closest && event.target.closest("input, textarea, select"));
-      cursorDot.classList.toggle("is-hidden", inField);
       cursorRing.classList.toggle("is-hidden", inField);
+      const onDark = Boolean(event.target.closest && event.target.closest(".hero, .ticker, .orbit-stage, .about-section, .to-top"));
+      cursorRing.classList.toggle("is-on-dark", onDark);
       const interactive = !inField && event.target.closest && event.target.closest("a, button, .orbit-chip, .project-card, .skill-card");
       cursorRing.classList.toggle("is-active", Boolean(interactive));
       if (!raf) raf = window.requestAnimationFrame(loop);
@@ -868,4 +881,31 @@
   if (toTop) toTop.addEventListener("click", () => {
     window.scrollTo({ top: 0, behavior: reduce ? "auto" : "smooth" });
   });
+
+  /* --- language donut hover/focus sync --- */
+  const langPanel = document.querySelector(".lang-chart-panel");
+  if (langPanel) {
+    const slices = Array.from(langPanel.querySelectorAll(".lang-slice"));
+    const rows = Array.from(langPanel.querySelectorAll(".lang-row"));
+    const centerVal = langPanel.querySelector("[data-donut-value]");
+    const centerLabel = langPanel.querySelector("[data-donut-label]");
+    const defaultVal = centerVal ? centerVal.textContent : "";
+    const defaultLabel = centerLabel ? centerLabel.textContent : "";
+
+    const highlightLang = key => {
+      langPanel.classList.toggle("is-filtering", Boolean(key));
+      slices.forEach(slice => slice.classList.toggle("is-active", slice.dataset.lang === key));
+      rows.forEach(rowEl => rowEl.classList.toggle("is-active", rowEl.dataset.lang === key));
+      const activeSlice = key ? slices.find(slice => slice.dataset.lang === key) : null;
+      if (centerVal) centerVal.textContent = activeSlice ? activeSlice.dataset.value : defaultVal;
+      if (centerLabel) centerLabel.textContent = activeSlice ? activeSlice.dataset.label : defaultLabel;
+    };
+
+    [...slices, ...rows].forEach(el => {
+      el.addEventListener("pointerenter", () => highlightLang(el.dataset.lang));
+      el.addEventListener("focus", () => highlightLang(el.dataset.lang));
+      el.addEventListener("pointerleave", () => highlightLang(null));
+      el.addEventListener("blur", () => highlightLang(null));
+    });
+  }
 })();

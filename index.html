@@ -11,7 +11,7 @@
   <meta property="og:image" content="https://github.com/CodeChen-1.png">
   <title>CodeChen-1 — Software portfolio</title>
   <link rel="icon" href="favicon.svg" type="image/svg+xml">
-  <link rel="stylesheet" href="styles.css?v=20261127-5">
+  <link rel="stylesheet" href="styles.css?v=20261127-11">
   <script type="importmap">
     { "imports": { "three": "https://cdn.jsdelivr.net/npm/three@0.170.0/build/three.module.min.js" } }
   </script>
@@ -64,7 +64,7 @@
             <a class="text-link text-link-light" href="https://github.com/CodeChen-1" target="_blank" rel="noreferrer">GitHub profile <span aria-hidden="true">↗</span></a>
           </div>
           <div class="hero-ledger" aria-label="Portfolio contents">
-            <span><strong data-counter="8" data-counter-pad="2">08</strong> PUBLIC PROJECTS</span>
+            <span><strong data-counter="9" data-counter-pad="2">09</strong> PUBLIC PROJECTS</span>
             <span><strong data-counter="2" data-counter-pad="2">02</strong> IN PROGRESS</span>
             <span><strong data-counter="3" data-counter-pad="2">03</strong> AREAS OF WORK</span>
           </div>
@@ -73,7 +73,7 @@
         <section class="ranked-showcase" aria-labelledby="ranked-title">
           <div class="ranked-showcase-heading">
             <p class="eyebrow"><span class="eyebrow-number">00</span> THE TOP THREE</p>
-            <span class="ranked-showcase-index">RANKED / 08</span>
+            <span class="ranked-showcase-index">RANKED / 09</span>
           </div>
           <div class="ranked-showcase-lead">
             <h2 id="ranked-title">Three strongest<br><em>builds.</em></h2>
@@ -92,10 +92,10 @@
     <div class="ticker" aria-hidden="true">
       <div class="ticker-track">
         <div class="ticker-run">
-          <span>MISINFORMATION DETECTION</span><i>→</i><span>TASK MANAGEMENT SYSTEM</span><i>→</i><span>BUDGET MILESTONE TRACKER</span><i>→</i><span>ROAD SAFETY DASHBOARD</span><i>→</i><span>PARKING MONITORING</span><i>→</i><span>RENT A CAR</span><i>→</i><span>GYMNASTICS SCORING</span><i>→</i><span>IP WEBCAM SCANNER</span><i>→</i><span>STUDY SESSION PLANNER</span><i>→</i><span>SMART DOWNLOAD MANAGER</span><i>→</i>
+          <span>MISINFORMATION DETECTION</span><i>→</i><span>ROOMFLOW BOOKING</span><i>→</i><span>TASK MANAGEMENT SYSTEM</span><i>→</i><span>BUDGET MILESTONE TRACKER</span><i>→</i><span>ROAD SAFETY DASHBOARD</span><i>→</i><span>PARKING MONITORING</span><i>→</i><span>RENT A CAR</span><i>→</i><span>GYMNASTICS SCORING</span><i>→</i><span>IP WEBCAM SCANNER</span><i>→</i><span>STUDY SESSION PLANNER</span><i>→</i><span>SMART DOWNLOAD MANAGER</span><i>→</i>
         </div>
         <div class="ticker-run">
-          <span>MISINFORMATION DETECTION</span><i>→</i><span>TASK MANAGEMENT SYSTEM</span><i>→</i><span>BUDGET MILESTONE TRACKER</span><i>→</i><span>ROAD SAFETY DASHBOARD</span><i>→</i><span>PARKING MONITORING</span><i>→</i><span>RENT A CAR</span><i>→</i><span>GYMNASTICS SCORING</span><i>→</i><span>IP WEBCAM SCANNER</span><i>→</i><span>STUDY SESSION PLANNER</span><i>→</i><span>SMART DOWNLOAD MANAGER</span><i>→</i>
+          <span>MISINFORMATION DETECTION</span><i>→</i><span>ROOMFLOW BOOKING</span><i>→</i><span>TASK MANAGEMENT SYSTEM</span><i>→</i><span>BUDGET MILESTONE TRACKER</span><i>→</i><span>ROAD SAFETY DASHBOARD</span><i>→</i><span>PARKING MONITORING</span><i>→</i><span>RENT A CAR</span><i>→</i><span>GYMNASTICS SCORING</span><i>→</i><span>IP WEBCAM SCANNER</span><i>→</i><span>STUDY SESSION PLANNER</span><i>→</i><span>SMART DOWNLOAD MANAGER</span><i>→</i>
         </div>
       </div>
     </div>
@@ -105,14 +105,22 @@
         <p class="eyebrow"><span class="eyebrow-number">01</span> EXPLORE IN 3D</p>
         <h2 id="orbit-title">Spin the <em>project map.</em></h2>
         <p>Each node is a project; lines join projects of the same kind. Drag to rotate, hover to read, click to jump to its card.</p>
-        <div class="orbit-legend" aria-label="Project map legend">
-          <span class="legend-item"><span class="legend-dot" style="--dot-color: #5664ff"></span>Web</span>
-          <span class="legend-item"><span class="legend-dot" style="--dot-color: #38bdf8"></span>Mobile</span>
-          <span class="legend-item"><span class="legend-dot" style="--dot-color: #c084fc"></span>Vision</span>
-          <span class="legend-item"><span class="legend-dot" style="--dot-color: #94a3b8"></span>Other</span>
-          <span class="legend-note">&middot; Node size shows score</span>
+        <div class="orbit-ledger">
+          <div class="orbit-ledger-head">
+            <div class="orbit-filters" role="group" aria-label="Filter projects in 3D map">
+              <button type="button" class="orbit-filter is-active" data-orbit-filter="all" aria-pressed="true">All</button>
+              <button type="button" class="orbit-filter" data-orbit-filter="web" aria-pressed="false"><span class="legend-dot" style="--dot-color: #5664ff" aria-hidden="true"></span>Web</button>
+              <button type="button" class="orbit-filter" data-orbit-filter="mobile" aria-pressed="false"><span class="legend-dot" style="--dot-color: #38bdf8" aria-hidden="true"></span>Mobile</button>
+              <button type="button" class="orbit-filter" data-orbit-filter="vision" aria-pressed="false"><span class="legend-dot" style="--dot-color: #c084fc" aria-hidden="true"></span>Vision</button>
+              <button type="button" class="orbit-filter" data-orbit-filter="other" aria-pressed="false"><span class="legend-dot" style="--dot-color: #94a3b8" aria-hidden="true"></span>Other</button>
+            </div>
+          </div>
+          <ul class="orbit-chips" aria-label="Projects (keyboard alternative to the 3D map)"></ul>
+          <div class="orbit-ledger-foot">
+            <span>NODE SIZE SHOWS SCORE</span>
+            <span data-orbit-count>11 PROJECTS</span>
+          </div>
         </div>
-        <ul class="orbit-chips" aria-label="Projects (keyboard alternative to the 3D map)"></ul>
       </div>
       <div class="orbit-stage">
         <canvas class="orbit-canvas" role="img" aria-label="Interactive 3D map of portfolio projects. Use the project list for keyboard access."></canvas>
@@ -127,14 +135,14 @@
           <p class="eyebrow"><span class="eyebrow-number">02</span> THE INDEX</p>
           <h2 id="work-title">Browse the systems.</h2>
         </div>
-        <p class="section-summary">Eight completed projects are rated and ranked by engineering depth, workflow completeness, README-reported verification, and documentation. The index follows that order.</p>
+        <p class="section-summary">Nine completed projects are rated and ranked by engineering depth, workflow completeness, README-reported verification, and documentation. The index follows that order.</p>
       </div>
 
       <div class="project-controls" data-reveal="late">
         <div class="filter-list" role="group" aria-label="Filter projects by area">
-          <button class="filter-button is-active" type="button" data-filter="all" aria-pressed="true">All work <span data-filter-count="all">10</span></button>
+          <button class="filter-button is-active" type="button" data-filter="all" aria-pressed="true">All work <span data-filter-count="all">11</span></button>
           <button class="filter-button" type="button" data-filter="mobile" aria-pressed="false">Mobile <span data-filter-count="mobile">3</span></button>
-          <button class="filter-button" type="button" data-filter="web" aria-pressed="false">Web <span data-filter-count="web">4</span></button>
+          <button class="filter-button" type="button" data-filter="web" aria-pressed="false">Web <span data-filter-count="web">5</span></button>
           <button class="filter-button" type="button" data-filter="vision" aria-pressed="false">Computer vision <span data-filter-count="vision">2</span></button>
           <button class="filter-button" type="button" data-filter="other" aria-pressed="false">Other <span data-filter-count="other">1</span></button>
         </div>
@@ -168,32 +176,104 @@
           <p class="eyebrow"><span class="eyebrow-number">04</span> THE TOOLKIT</p>
           <h2 id="skills-title">Skills in practice.</h2>
         </div>
-        <p class="section-summary">Languages, tools, and techniques shown across these repositories. Each is tied to project work, with no self-rated proficiency levels.</p>
+        <p class="section-summary">Languages, tools, and techniques shown across these repositories. Percentage weights reflect GitHub repository byte counts across the 10 public project repositories, with no self-rated proficiency levels.</p>
+      </div>
+
+      <div class="lang-chart-panel" data-reveal>
+        <div class="lang-breakdown-head">
+          <span>LANGUAGE WEIGHT · GITHUB REPOSITORY BYTES</span>
+          <span>11 PROJECT REPOS · 1.25 MB</span>
+        </div>
+        <div class="lang-chart-body">
+          <div class="lang-donut-wrap">
+            <svg class="lang-donut" viewBox="0 0 180 180" role="img" aria-label="Language distribution by bytes: JavaScript 42.5%, Kotlin 16.2%, Python 15.3%, TypeScript 14.2%, CSS 6.3%, HTML 5.2%, Other 0.3%">
+              <circle class="lang-track" cx="90" cy="90" r="68"></circle>
+              <circle class="lang-slice" data-lang="js" data-label="JAVASCRIPT · 6 REPOS" data-value="42.5%" cx="90" cy="90" r="68" stroke="#3039c8" stroke-dasharray="176.19 427.26" stroke-dashoffset="0"></circle>
+              <circle class="lang-slice" data-lang="kotlin" data-label="KOTLIN · 3 REPOS" data-value="16.2%" cx="90" cy="90" r="68" stroke="#5664ff" stroke-dasharray="67.19 427.26" stroke-dashoffset="-177.99"></circle>
+              <circle class="lang-slice" data-lang="python" data-label="PYTHON · 5 REPOS" data-value="15.3%" cx="90" cy="90" r="68" stroke="#0284c7" stroke-dasharray="63.38 427.26" stroke-dashoffset="-246.98"></circle>
+              <circle class="lang-slice" data-lang="ts" data-label="TYPESCRIPT · 1 REPO" data-value="14.2%" cx="90" cy="90" r="68" stroke="#2563eb" stroke-dasharray="58.96 427.26" stroke-dashoffset="-312.16"></circle>
+              <circle class="lang-slice" data-lang="css" data-label="CSS · 6 REPOS" data-value="6.3%" cx="90" cy="90" r="68" stroke="#0d9488" stroke-dasharray="26.00 427.26" stroke-dashoffset="-372.92"></circle>
+              <circle class="lang-slice" data-lang="html" data-label="HTML · 6 REPOS" data-value="5.2%" cx="90" cy="90" r="68" stroke="#7c3aed" stroke-dasharray="21.62 427.26" stroke-dashoffset="-400.72"></circle>
+              <circle class="lang-slice" data-lang="other" data-label="JAVA · BATCH · MAKO" data-value="0.3%" cx="90" cy="90" r="68" stroke="#64748b" stroke-dasharray="1.32 427.26" stroke-dashoffset="-424.14"></circle>
+            </svg>
+            <div class="lang-donut-center" aria-hidden="true">
+              <strong data-donut-value>1.25 MB</strong>
+              <span data-donut-label>11 PROJECT REPOS</span>
+            </div>
+          </div>
+          <ul class="lang-rows">
+            <li class="lang-row" data-lang="js" tabindex="0">
+              <span class="lang-dot" style="--dot-color: #3039c8" aria-hidden="true"></span>
+              <span class="lang-row-name">JavaScript</span>
+              <span class="lang-row-meta">530 KB · 6 repos</span>
+              <strong class="lang-row-pct">42.5%</strong>
+            </li>
+            <li class="lang-row" data-lang="kotlin" tabindex="0">
+              <span class="lang-dot" style="--dot-color: #5664ff" aria-hidden="true"></span>
+              <span class="lang-row-name">Kotlin</span>
+              <span class="lang-row-meta">202 KB · 3 repos</span>
+              <strong class="lang-row-pct">16.2%</strong>
+            </li>
+            <li class="lang-row" data-lang="python" tabindex="0">
+              <span class="lang-dot" style="--dot-color: #0284c7" aria-hidden="true"></span>
+              <span class="lang-row-name">Python</span>
+              <span class="lang-row-meta">191 KB · 5 repos</span>
+              <strong class="lang-row-pct">15.3%</strong>
+            </li>
+            <li class="lang-row" data-lang="ts" tabindex="0">
+              <span class="lang-dot" style="--dot-color: #2563eb" aria-hidden="true"></span>
+              <span class="lang-row-name">TypeScript</span>
+              <span class="lang-row-meta">178 KB · 1 repo</span>
+              <strong class="lang-row-pct">14.2%</strong>
+            </li>
+            <li class="lang-row" data-lang="css" tabindex="0">
+              <span class="lang-dot" style="--dot-color: #0d9488" aria-hidden="true"></span>
+              <span class="lang-row-name">CSS</span>
+              <span class="lang-row-meta">78 KB · 6 repos</span>
+              <strong class="lang-row-pct">6.3%</strong>
+            </li>
+            <li class="lang-row" data-lang="html" tabindex="0">
+              <span class="lang-dot" style="--dot-color: #7c3aed" aria-hidden="true"></span>
+              <span class="lang-row-name">HTML</span>
+              <span class="lang-row-meta">65 KB · 6 repos</span>
+              <strong class="lang-row-pct">5.2%</strong>
+            </li>
+            <li class="lang-row" data-lang="other" tabindex="0">
+              <span class="lang-dot" style="--dot-color: #64748b" aria-hidden="true"></span>
+              <span class="lang-row-name">Other (Java · Batch · Mako)</span>
+              <span class="lang-row-meta">4 KB · 3 repos</span>
+              <strong class="lang-row-pct">0.3%</strong>
+            </li>
+          </ul>
+        </div>
       </div>
 
       <div class="skills-grid">
-        <article class="skill-card" data-reveal>
+        <article class="skill-card" data-reveal style="--lang-color: #3039c8; --lang-pct: 42.5%">
           <header class="skill-card-heading">
             <div>
               <p class="skill-kicker">01 / LANGUAGE</p>
-              <h3>Python</h3>
+              <h3>JavaScript</h3>
             </div>
-            <span class="skill-domain">API · DATA · VISION</span>
+            <div class="skill-weight">
+              <span class="skill-domain">WEB · INTERACTION</span>
+              <strong>42.5%</strong>
+            </div>
           </header>
-          <p class="skill-summary">Services, data workflows, and computer-vision projects.</p>
+          <p class="skill-summary">Interactive interfaces, dashboards, and browser-based workflows.</p>
           <div class="skill-profile">
-            <section class="skill-block" aria-label="Python techniques">
+            <section class="skill-block" aria-label="JavaScript techniques">
               <h4>TECHNIQUES</h4>
               <ul class="skill-methods">
-                <li>Model comparison and word-level analysis</li>
-                <li>Object detection, OCR, and document edges</li>
-                <li>API-backed workflows and structured storage</li>
+                <li>Interactive maps, charts, and data comparisons</li>
+                <li>Search, filtering, and visible task state</li>
+                <li>Local focus logs and CSV export</li>
               </ul>
             </section>
-            <section class="skill-block" aria-label="Python tools">
+            <section class="skill-block" aria-label="JavaScript tools">
               <h4>TOOLS</h4>
               <div class="skill-tags">
-                <span>FastAPI</span><span>Flask</span><span>scikit-learn</span><span>YOLOv8</span><span>OpenCV</span><span>EasyOCR</span><span>SQLAlchemy</span><span>SQLite</span>
+                <span>React 19</span><span>D3.js v7</span><span>TopoJSON Client v3</span><span>DOM / SVG</span>
               </div>
             </section>
           </div>
@@ -201,20 +281,24 @@
             <h4>PROJECT EVIDENCE</h4>
             <div class="skill-project-links">
               <a href="https://github.com/CodeChen-1/Misinformation-Detection-System" target="_blank" rel="noreferrer">Misinformation detection</a>
+              <a href="https://github.com/CodeChen-1/Study-Session-Planner" target="_blank" rel="noreferrer">Study session planner</a>
               <a href="https://github.com/CodeChen-1/Task-Management-System" target="_blank" rel="noreferrer">Task management</a>
+              <a href="https://github.com/CodeChen-1/Data-Visualisation-Project" target="_blank" rel="noreferrer">Road safety dashboard</a>
               <a href="https://github.com/CodeChen-1/Parking-Monitoring-System" target="_blank" rel="noreferrer">Parking monitor</a>
-              <a href="https://github.com/CodeChen-1/CamScanner" target="_blank" rel="noreferrer">CamScanner</a>
             </div>
           </div>
         </article>
 
-        <article class="skill-card" data-reveal>
+        <article class="skill-card" data-reveal style="--lang-color: #5664ff; --lang-pct: 16.2%">
           <header class="skill-card-heading">
             <div>
               <p class="skill-kicker">02 / LANGUAGE</p>
               <h3>Kotlin</h3>
             </div>
-            <span class="skill-domain">ANDROID · MOBILE</span>
+            <div class="skill-weight">
+              <span class="skill-domain">ANDROID · MOBILE</span>
+              <strong>16.2%</strong>
+            </div>
           </header>
           <p class="skill-summary">Native apps built around tracking, rental, and scoring flows.</p>
           <div class="skill-profile">
@@ -243,38 +327,156 @@
           </div>
         </article>
 
-        <article class="skill-card" data-reveal>
+        <article class="skill-card" data-reveal style="--lang-color: #0284c7; --lang-pct: 15.3%">
           <header class="skill-card-heading">
             <div>
               <p class="skill-kicker">03 / LANGUAGE</p>
-              <h3>JavaScript<br><span>HTML · CSS</span></h3>
+              <h3>Python</h3>
             </div>
-            <span class="skill-domain">WEB · INTERACTION</span>
+            <div class="skill-weight">
+              <span class="skill-domain">API · DATA · VISION</span>
+              <strong>15.3%</strong>
+            </div>
           </header>
-          <p class="skill-summary">Interactive interfaces, dashboards, and browser-based workflows.</p>
+          <p class="skill-summary">Services, data workflows, and computer-vision projects.</p>
           <div class="skill-profile">
-            <section class="skill-block" aria-label="Web techniques">
+            <section class="skill-block" aria-label="Python techniques">
               <h4>TECHNIQUES</h4>
               <ul class="skill-methods">
-                <li>Interactive maps, charts, and data comparisons</li>
-                <li>Search, filtering, and visible task state</li>
-                <li>Local focus logs and CSV export</li>
+                <li>Model comparison and word-level analysis</li>
+                <li>Object detection, OCR, and document edges</li>
+                <li>API-backed workflows and structured storage</li>
               </ul>
             </section>
-            <section class="skill-block" aria-label="Web tools">
+            <section class="skill-block" aria-label="Python tools">
               <h4>TOOLS</h4>
               <div class="skill-tags">
-                <span>React 19</span><span>D3.js v7</span><span>TopoJSON Client v3</span>
+                <span>FastAPI</span><span>Flask</span><span>scikit-learn</span><span>YOLOv8</span><span>OpenCV</span><span>EasyOCR</span><span>PostgreSQL</span><span>Alembic</span><span>SQLAlchemy</span><span>SQLite</span>
               </div>
             </section>
           </div>
           <div class="skill-evidence">
             <h4>PROJECT EVIDENCE</h4>
             <div class="skill-project-links">
-              <a href="https://github.com/CodeChen-1/Data-Visualisation-Project" target="_blank" rel="noreferrer">Road safety dashboard</a>
               <a href="https://github.com/CodeChen-1/Misinformation-Detection-System" target="_blank" rel="noreferrer">Misinformation detection</a>
+              <a href="https://github.com/CodeChen-1/RoomFlow" target="_blank" rel="noreferrer">RoomFlow</a>
               <a href="https://github.com/CodeChen-1/Task-Management-System" target="_blank" rel="noreferrer">Task management</a>
+              <a href="https://github.com/CodeChen-1/Parking-Monitoring-System" target="_blank" rel="noreferrer">Parking monitor</a>
+              <a href="https://github.com/CodeChen-1/CamScanner" target="_blank" rel="noreferrer">CamScanner</a>
+            </div>
+          </div>
+        </article>
+
+        <article class="skill-card" data-reveal style="--lang-color: #2563eb; --lang-pct: 14.2%">
+          <header class="skill-card-heading">
+            <div>
+              <p class="skill-kicker">04 / LANGUAGE</p>
+              <h3>TypeScript</h3>
+            </div>
+            <div class="skill-weight">
+              <span class="skill-domain">WEB · TYPE-SAFE UI</span>
+              <strong>14.2%</strong>
+            </div>
+          </header>
+          <p class="skill-summary">Typed frontend architecture for scheduling, conflict checks, and admin views.</p>
+          <div class="skill-profile">
+            <section class="skill-block" aria-label="TypeScript techniques">
+              <h4>TECHNIQUES</h4>
+              <ul class="skill-methods">
+                <li>Typed API contracts for rooms and bookings</li>
+                <li>Interactive calendar and slot-conflict UI</li>
+                <li>Reusable form state and admin analytics</li>
+              </ul>
+            </section>
+            <section class="skill-block" aria-label="TypeScript tools">
+              <h4>TOOLS</h4>
+              <div class="skill-tags">
+                <span>TypeScript</span><span>Next.js</span><span>React</span><span>Tailwind CSS</span>
+              </div>
+            </section>
+          </div>
+          <div class="skill-evidence">
+            <h4>PROJECT EVIDENCE</h4>
+            <div class="skill-project-links">
+              <a href="https://github.com/CodeChen-1/RoomFlow" target="_blank" rel="noreferrer">RoomFlow</a>
+            </div>
+          </div>
+        </article>
+
+        <article class="skill-card" data-reveal style="--lang-color: #0d9488; --lang-pct: 6.3%">
+          <header class="skill-card-heading">
+            <div>
+              <p class="skill-kicker">05 / STYLING</p>
+              <h3>CSS</h3>
+            </div>
+            <div class="skill-weight">
+              <span class="skill-domain">LAYOUT · MOTION</span>
+              <strong>6.3%</strong>
+            </div>
+          </header>
+          <p class="skill-summary">Responsive layouts, visual hierarchy, and interactive state styling.</p>
+          <div class="skill-profile">
+            <section class="skill-block" aria-label="CSS techniques">
+              <h4>TECHNIQUES</h4>
+              <ul class="skill-methods">
+                <li>Responsive Grid and Flexbox layouts</li>
+                <li>Custom properties, dark/light surfaces, and motion</li>
+              </ul>
+            </section>
+            <section class="skill-block" aria-label="CSS tools">
+              <h4>TOOLS</h4>
+              <div class="skill-tags">
+                <span>CSS Grid</span><span>Flexbox</span><span>Custom Properties</span><span>Keyframes</span>
+              </div>
+            </section>
+          </div>
+          <div class="skill-evidence">
+            <h4>PROJECT EVIDENCE</h4>
+            <div class="skill-project-links">
+              <a href="https://github.com/CodeChen-1/RoomFlow" target="_blank" rel="noreferrer">RoomFlow</a>
+              <a href="https://github.com/CodeChen-1/Task-Management-System" target="_blank" rel="noreferrer">Task management</a>
+              <a href="https://github.com/CodeChen-1/Data-Visualisation-Project" target="_blank" rel="noreferrer">Road safety dashboard</a>
               <a href="https://github.com/CodeChen-1/Study-Session-Planner" target="_blank" rel="noreferrer">Study session planner</a>
+              <a href="https://github.com/CodeChen-1/Parking-Monitoring-System" target="_blank" rel="noreferrer">Parking monitor</a>
+            </div>
+          </div>
+        </article>
+
+        <article class="skill-card" data-reveal style="--lang-color: #7c3aed; --lang-pct: 5.2%">
+          <header class="skill-card-heading">
+            <div>
+              <p class="skill-kicker">06 / MARKUP</p>
+              <h3>HTML</h3>
+            </div>
+            <div class="skill-weight">
+              <span class="skill-domain">STRUCTURE · A11Y</span>
+              <strong>5.2%</strong>
+            </div>
+          </header>
+          <p class="skill-summary">Semantic page structure, accessible forms, and dashboard views.</p>
+          <div class="skill-profile">
+            <section class="skill-block" aria-label="HTML techniques">
+              <h4>TECHNIQUES</h4>
+              <ul class="skill-methods">
+                <li>Semantic landmarks and accessible controls</li>
+                <li>Interactive tables, filters, and dashboard layouts</li>
+              </ul>
+            </section>
+            <section class="skill-block" aria-label="HTML tools">
+              <h4>TOOLS</h4>
+              <div class="skill-tags">
+                <span>HTML5</span><span>ARIA</span><span>Semantic DOM</span><span>SVG</span>
+              </div>
+            </section>
+          </div>
+          <div class="skill-evidence">
+            <h4>PROJECT EVIDENCE</h4>
+            <div class="skill-project-links">
+              <a href="https://github.com/CodeChen-1/RoomFlow" target="_blank" rel="noreferrer">RoomFlow</a>
+              <a href="https://github.com/CodeChen-1/Task-Management-System" target="_blank" rel="noreferrer">Task management</a>
+              <a href="https://github.com/CodeChen-1/Data-Visualisation-Project" target="_blank" rel="noreferrer">Road safety dashboard</a>
+              <a href="https://github.com/CodeChen-1/Study-Session-Planner" target="_blank" rel="noreferrer">Study session planner</a>
+              <a href="https://github.com/CodeChen-1/Parking-Monitoring-System" target="_blank" rel="noreferrer">Parking monitor</a>
             </div>
           </div>
         </article>
@@ -316,9 +518,9 @@
   <button class="to-top" type="button" aria-label="Back to top">↑</button>
   <div class="grain" aria-hidden="true"></div>
 
-  <script src="projects.js?v=20261119-1"></script>
-  <script src="app.js?v=20261127-5"></script>
+  <script src="projects.js?v=20261127-11"></script>
+  <script src="app.js?v=20261127-11"></script>
   <script type="module" src="hero-3d.js?v=20261127-1"></script>
-  <script type="module" src="orbit-3d.js?v=20261127-4"></script>
+  <script type="module" src="orbit-3d.js?v=20261127-11"></script>
 </body>
 </html>
