@@ -14,7 +14,8 @@ window.PORTFOLIO_PROJECTS = [
     testing: "README reports 56 backend tests and 35 frontend tests.",
     visual: "models",
     visualLabel: "Text input flows to three machine-learning models, then to a result with word-level explanations.",
-    repo: "https://github.com/CodeChen-1/Misinformation-Detection-System"
+    repo: "https://github.com/CodeChen-1/Misinformation-Detection-System",
+    diagram: "diagrams/misinformation-detection.html"
   },
   {
     name: "RoomFlow",
@@ -25,13 +26,14 @@ window.PORTFOLIO_PROJECTS = [
     category: "web",
     kind: "WEB APP · ROOM BOOKING",
     state: "Live schedule + booking",
-    description: "A full-stack meeting and study room booking platform built with Next.js, TypeScript, and FastAPI. Browse rooms, check time-slot conflicts in real time, and manage recurring bookings and room utilization.",
+    description: "A full-stack meeting and study room booking platform built with React 19, TypeScript, and FastAPI. Browse rooms, check time-slot conflicts in real time, and manage recurring bookings and room utilization.",
     features: ["Interactive room availability and time-slot conflict detection", "Calendar schedule views, booking history, and status filters", "Admin controls for room capacity, equipment, and usage analytics"],
-    stack: ["Next.js", "TypeScript", "FastAPI", "PostgreSQL"],
-    testing: "Type-checked frontend with FastAPI and Alembic schema migrations.",
+    stack: ["React 19", "TypeScript", "FastAPI", "PostgreSQL"],
+    testing: "Pytest backend tests, Vitest unit tests, and Playwright E2E suite.",
     visual: "rooms",
     visualLabel: "Room cards show live availability, time slots, and confirmed booking state.",
-    repo: "https://github.com/CodeChen-1/RoomFlow"
+    repo: "https://github.com/CodeChen-1/RoomFlow",
+    diagram: "diagrams/roomflow.html"
   },
   {
     name: "BudgetMilestoneTracker",
@@ -65,7 +67,8 @@ window.PORTFOLIO_PROJECTS = [
     testing: "Includes pytest regression tests and JavaScript tests.",
     visual: "tasks",
     visualLabel: "Tasks move from the inbox to today's priorities and a checklist.",
-    repo: "https://github.com/CodeChen-1/Task-Management-System"
+    repo: "https://github.com/CodeChen-1/Task-Management-System",
+    diagram: "diagrams/task-management.html"
   },
   {
     name: "Parking-Monitoring-System",
@@ -81,7 +84,8 @@ window.PORTFOLIO_PROJECTS = [
     testing: "",
     visual: "parking",
     visualLabel: "Separate inbound and outbound camera feeds pass through plate detection and text recognition into an entry and exit log.",
-    repo: "https://github.com/CodeChen-1/Parking-Monitoring-System"
+    repo: "https://github.com/CodeChen-1/Parking-Monitoring-System",
+    diagram: "diagrams/parking-monitoring.html"
   },
   {
     name: "RentACar",

@@ -516,22 +516,41 @@
     const stack = make("div", "project-stack");
     stack.setAttribute("aria-label", "Technology stack");
     project.stack.forEach(label => stack.appendChild(make("span", "stack-tag", label)));
+    if (project.diagram) {
+      const diagramTag = make("a", "stack-tag stack-tag--diagram", "Archify diagram ↗");
+      diagramTag.href = project.diagram;
+      diagramTag.target = "_blank";
+      diagramTag.rel = "noreferrer";
+      diagramTag.setAttribute("aria-label", "Open " + project.title + " Archify architecture diagram");
+      stack.appendChild(diagramTag);
+    }
     const footer = make("div", "project-footer");
     const progressNote = project.hasSource
       ? "Public source files; README not available yet."
       : "Source files and README not public yet.";
     const note = project.testing || (project.isInProgress ? progressNote : (project.category === "vision" ? "See the repository README for requirements and setup." : ""));
     const test = make("span", "project-test", note);
+    const links = make("div", "project-links");
+    if (project.diagram) {
+      const diagramLink = make("a", "diagram-link", "Architecture");
+      diagramLink.href = project.diagram;
+      diagramLink.target = "_blank";
+      diagramLink.rel = "noreferrer";
+      diagramLink.setAttribute("aria-label", "Open " + project.title + " architecture diagram");
+      diagramLink.appendChild(make("span", "", "↗"));
+      links.appendChild(diagramLink);
+    }
     const link = make("a", "repo-link", "View repository");
     link.href = project.repo;
     link.target = "_blank";
     link.rel = "noreferrer";
     link.setAttribute("aria-label", "View " + project.name + " on GitHub");
     link.appendChild(make("span", "", "↗"));
-    add(footer, test, link);
+    links.appendChild(link);
+    add(footer, test, links);
     add(content, topline, title, summary);
     if (project.features.length) content.appendChild(features);
-    if (project.stack.length) content.appendChild(stack);
+    if (project.stack.length || project.diagram) content.appendChild(stack);
     content.appendChild(footer);
     add(article, art, content);
     playCardDemo(article, project);
@@ -544,7 +563,7 @@
     return orderedProjects.filter(project => {
       const categoryMatches = activeCategory === "all" || project.category === activeCategory;
       const haystack = [project.name, project.title, project.kind, project.state, project.description]
-        .concat(project.features, project.stack).join(" ").toLowerCase();
+        .concat(project.features, project.stack, project.diagram ? ["archify", "diagram", "architecture"] : []).join(" ").toLowerCase();
       return categoryMatches && haystack.includes(searchTerm);
     });
   }
