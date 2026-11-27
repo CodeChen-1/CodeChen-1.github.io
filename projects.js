@@ -123,7 +123,7 @@ window.PORTFOLIO_PROJECTS = [
   {
     name: "CamScanner",
     title: "IP webcam document scanner",
-    rank: 9,
+    rank: 10,
     score: 6.6,
     category: "vision",
     kind: "COMPUTER VISION · DOCUMENTS",
@@ -173,19 +173,17 @@ window.PORTFOLIO_PROJECTS = [
   {
     name: "Study-Session-Planner",
     title: "Study session planner",
+    rank: 9,
+    score: 7.4,
     category: "web",
     kind: "WEB APP · STUDY WORKFLOW",
-    state: "In progress",
-    description: "An early study tool with a 25-minute focus timer, five-minute breaks, a locally saved focus log, and CSV export. The project is still in progress.",
-    features: ["25-minute focus and five-minute break timer", "Timer state and focus history saved locally", "Manual focus logging with CSV export"],
+    state: "Timer + recall log",
+    description: "A client-side study planner with a 25-minute focus timer, five-minute breaks, spaced-repetition recall prompts, a locally saved focus log, and CSV export.",
+    features: ["25-minute focus and five-minute break timer", "Spaced-repetition recall scheduling (remembered, partly, missed)", "Local focus history with manual logging and CSV export"],
     stack: ["HTML", "CSS", "JavaScript"],
-    testing: "The repository includes CSV export tests.",
-    visual: "progress",
-    visualLabel: "A study timer and saved focus log, with public source available while the project is in progress.",
-    isInProgress: true,
-    showInProjectIndex: true,
-    hasSource: true,
-    hasReadme: false,
+    testing: "Includes node:test suites for CSV export and spaced-repetition recall.",
+    visual: "study",
+    visualLabel: "A 25-minute focus timer pairs with spaced-repetition recall prompts and CSV export.",
     repo: "https://github.com/CodeChen-1/Study-Session-Planner"
   }
 ];

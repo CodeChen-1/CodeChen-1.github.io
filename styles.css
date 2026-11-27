@@ -777,6 +777,18 @@ html { scrollbar-width: thin; scrollbar-color: #b9beff transparent; }
 .pv-slot.is-booked { background: #ececf5; text-decoration: line-through; }
 .pv-slot.is-free { border-color: var(--blue); background: #eef0ff; color: var(--blue-deep); }
 
+/* study timer */
+.pv-study-timer {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  padding: 7px 9px;
+  border: 1px solid #d2d4eb;
+  background: #fbfaf7;
+}
+.pv-study-timer b { font: 700 15px/1 var(--font-mono); color: var(--blue-deep); letter-spacing: -.03em; }
+.pv-study-timer span { font: 600 8px/1 var(--font-mono); color: var(--muted); }
+
 /* progress skeleton */
 .pv-skel { display: grid; gap: 6px; }
 .pv-skel i { height: 7px; background: linear-gradient(90deg, #e6e7f2 25%, #f4f5fb 42%, #e6e7f2 58%); background-size: 220% 100%; }

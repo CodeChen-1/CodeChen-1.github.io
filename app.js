@@ -391,11 +391,18 @@
         slots.appendChild(pv("span", "pv-slot " + slot[1], slot[0], "pop", 720 + index * 140));
       });
       add(body, rooms, slots, pv("div", "pv-chip pv-chip-good", "NO CONFLICT · CONFIRMED", "stamp", 1400));
+    } else if (project.visual === "study") {
+      const timer = pv("div", "pv-study-timer", undefined, "pop", 260);
+      add(timer, make("b", "", "25:00"), make("span", "", "FOCUS SESSION"));
+      const row = pv("div", "pv-row", undefined, "slide", 620);
+      add(row, make("span", "", "RECALL · REMEMBERED"), make("span", "", "+3 DAYS"));
+      add(body, timer, row, pv("div", "pv-chip pv-chip-good", "LOG SAVED · CSV READY", "stamp", 1050));
     }
 
     const windowTitles = {
       models: "MODEL COMPARISON",
       rooms: "ROOM BOOKING · LIVE",
+      study: "FOCUS · RECALL",
       budget: "SAVINGS · GOALS",
       tasks: "PLAN THE DAY",
       parking: "PARKING GATE",
