@@ -50,7 +50,8 @@ window.PORTFOLIO_PROJECTS = [
     testing: "README reports 30+ instrumented tests.",
     visual: "budget",
     visualLabel: "A budget workflow links expense tracking, category limits, and savings goals.",
-    repo: "https://github.com/CodeChen-1/BudgetMilestoneTracker"
+    repo: "https://github.com/CodeChen-1/BudgetMilestoneTracker",
+    diagram: "diagrams/budget-milestone-tracker.html"
   },
   {
     name: "Task-Management-System",
@@ -149,7 +150,8 @@ window.PORTFOLIO_PROJECTS = [
     testing: "",
     visual: "data",
     visualLabel: "An Australian road-safety dashboard compares state-level enforcement data through a map and multi-year charts.",
-    repo: "https://github.com/CodeChen-1/Data-Visualisation-Project"
+    repo: "https://github.com/CodeChen-1/Data-Visualisation-Project",
+    diagram: "diagrams/road-safety-dashboard.html"
   },
   {
     name: "Smart-Download-Manager",
