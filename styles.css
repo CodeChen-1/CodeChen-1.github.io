@@ -1084,9 +1084,10 @@ html { scroll-padding-top: 96px; }
   font: 500 9px/1.3 var(--font-mono);
   letter-spacing: .07em;
 }
-.orbit-stage { aspect-ratio: 1 / .84; height: auto; min-height: 340px; }
+.orbit-stage { width: 100%; max-width: 100%; min-width: 0; aspect-ratio: 1 / .84; height: auto; min-height: 340px; }
 @media (max-width: 860px) {
-  .orbit-section { grid-template-columns: 1fr; }
+  .orbit-section { grid-template-columns: minmax(0, 1fr); }
+  .orbit-stage { aspect-ratio: 1 / .92; min-height: 280px; }
 }
 @media (max-width: 760px) {
   .lang-chart-body { grid-template-columns: 1fr; gap: 18px; }
